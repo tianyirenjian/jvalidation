@@ -8,7 +8,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +31,9 @@ public class JDoValidate {
         Object[] args = joinPoint.getArgs();
         Map<String, Object> errors = doValidate(collectAnnotationParameters(joinPoint, args));
         System.out.println(errors);
+        if (errors.size() > 0) {
+            return ResponseEntity.badRequest().body(errors);
+        }
         return joinPoint.proceed(args);
     }
 
