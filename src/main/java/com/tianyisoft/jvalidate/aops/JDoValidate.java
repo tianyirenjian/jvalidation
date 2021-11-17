@@ -1,14 +1,16 @@
 package com.tianyisoft.jvalidate.aops;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tianyisoft.jvalidate.annotations.JValidate;
 import com.tianyisoft.jvalidate.annotations.JValidated;
 import com.tianyisoft.jvalidate.annotations.NeedDatabase;
+import com.tianyisoft.jvalidate.exceptions.ValidateFailedException;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +34,9 @@ public class JDoValidate {
         Map<String, Object> errors = doValidate(collectAnnotationParameters(joinPoint, args));
         System.out.println(errors);
         if (errors.size() > 0) {
-            return ResponseEntity.badRequest().body(errors);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String json = objectMapper.writeValueAsString(errors);
+            throw new ValidateFailedException(HttpStatus.BAD_REQUEST, json);
         }
         return joinPoint.proceed(args);
     }
