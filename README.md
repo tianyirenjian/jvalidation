@@ -1,4 +1,4 @@
-<p align="center"><a href="https://github.com/tianyirenjian/jvalidation" target="_blank">JValidation</a></p>
+JValidation
 =======
 
 JValidation 是为 spring boot 开发的验证库。集成多种验证，目前正在新增中。
