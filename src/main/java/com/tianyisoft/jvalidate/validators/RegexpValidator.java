@@ -6,7 +6,10 @@ import com.tianyisoft.jvalidate.utils.Tuple2;
 import java.util.regex.Pattern;
 
 public class RegexpValidator extends Validator {
-    public Tuple2<Boolean, String> validate(Regexp regexp, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+    public Tuple2<Boolean, String> validate(Regexp regexp, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        if (!needValidateByGroups(groups, regexp.groups())) {
+            return trueResult();
+        }
         Object o = getFieldValue(klass, object, fieldName);
         return validateRegexp(o, regexp.rule(), regexp.flags(), regexp.message(), fieldName);
     }

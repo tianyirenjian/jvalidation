@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AlphaNum {
     String message() default "%s 只能由字母和数字组成";
+    Class<?>[] groups() default {};
 }

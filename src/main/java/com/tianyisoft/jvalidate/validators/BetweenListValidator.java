@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BetweenListValidator extends Validator {
-    public Tuple2<Boolean, String> validate(BetweenList betweenList, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+    public Tuple2<Boolean, String> validate(BetweenList betweenList, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        if (!needValidateByGroups(groups, betweenList.groups())) {
+            return trueResult();
+        }
         Object o = getFieldValue(klass, object, fieldName);
         if (o == null) {
             return trueResult();

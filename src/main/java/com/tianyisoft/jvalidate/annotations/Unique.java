@@ -11,7 +11,8 @@ public @interface Unique {
     String message() default "%s 在 %s 中已存在";
     String table();
     String field();
-    String excludeKey() default "id";
-    String excludeValue() default "";
+    String[] excludeKeys() default {};
+    String[] excludeValues() default {};
     String where() default "";
+    Class<?>[] groups() default {};
 }

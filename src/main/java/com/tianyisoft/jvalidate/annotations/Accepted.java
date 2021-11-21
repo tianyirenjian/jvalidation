@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Accepted {
     String message() default "%s 必须是 \"yes\" ，\"on\" ，\"1\" 或 \"true\"";
+    Class<?>[] groups() default {};
 }

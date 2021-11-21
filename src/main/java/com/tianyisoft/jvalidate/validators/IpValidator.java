@@ -8,7 +8,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class IpValidator extends RegexpValidator {
-    public Tuple2<Boolean, String> validate(Ip ip, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+    public Tuple2<Boolean, String> validate(Ip ip, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        if (!needValidateByGroups(groups, ip.groups())) {
+            return trueResult();
+        }
         Object o = getFieldValue(klass, object, fieldName);
         if (o == null) {
             return trueResult();

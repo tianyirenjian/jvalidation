@@ -12,4 +12,5 @@ public @interface BetweenDouble {
     String message() default "%s 必须在 %f 和 %f 之间";
     double min();
     double max();
+    Class<?>[] groups() default {};
 }

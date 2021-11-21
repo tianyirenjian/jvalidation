@@ -7,7 +7,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AcceptedValidator extends Validator {
-    public Tuple2<Boolean, String> validate(Accepted accepted, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+    public Tuple2<Boolean, String> validate(Accepted accepted, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        if (!needValidateByGroups(groups, accepted.groups())) {
+            return trueResult();
+        }
         Object o = getFieldValue(klass, object, fieldName);
         List<String> acceptedValues = Arrays.asList("on", "yes", "1", "true");
         if (o == null || (o instanceof String && (acceptedValues.contains(o)))) {

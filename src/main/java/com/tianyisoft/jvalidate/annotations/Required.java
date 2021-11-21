@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Required {
     String message() default "%s 不能为空";
+    Class<?>[] groups() default {};
 }

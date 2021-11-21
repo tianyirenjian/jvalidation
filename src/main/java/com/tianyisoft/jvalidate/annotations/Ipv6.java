@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Ipv6 {
     String message() default "%s 必须是有效的 ip v6 地址";
+    Class<?>[] groups() default {};
 }

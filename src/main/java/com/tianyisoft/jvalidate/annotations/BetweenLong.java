@@ -12,5 +12,6 @@ public @interface BetweenLong {
     String message() default "%s 必须在 %d 和 %d 之间";
     long min();
     long max();
+    Class<?>[] groups() default {};
 }
 

@@ -8,13 +8,16 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class UniquesValidator extends UniqueValidator {
-    public Tuple2<Boolean, String> validate(Uniques uniques, JdbcTemplate jdbcTemplate, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+    public Tuple2<Boolean, String> validate(Uniques uniques, Class<?>[] groups, JdbcTemplate jdbcTemplate, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        if (!needValidateByGroups(groups, uniques.groups())) {
+            return trueResult();
+        }
         Object o = getFieldValue(klass, object, fieldName);
         StringBuilder builder = new StringBuilder();
         AtomicBoolean b = new AtomicBoolean(true);
         Arrays.stream(uniques.value()).forEach(unique -> {
             try {
-                Tuple2<Boolean, String> result = validate(unique, jdbcTemplate, klass, object, fieldName);
+                Tuple2<Boolean, String> result = validate(unique, groups, jdbcTemplate, klass, object, fieldName);
                 if (!result.getV0()) {
                     builder.append(result.getV1());
                     builder.append(",");

@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Alpha {
     String message() default "%s 只能由字母组成";
+    Class<?>[] groups() default {};
 }

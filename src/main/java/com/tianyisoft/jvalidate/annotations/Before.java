@@ -12,4 +12,5 @@ public @interface Before {
     String message() default "%s 必须在 %s 之前";
     String date();
     boolean withTime() default false;
+    Class<?>[] groups() default {};
 }

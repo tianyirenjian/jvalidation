@@ -12,4 +12,5 @@ public @interface BetweenString {
     String message() default "%s 长度必须在 %d 和 %d 之间";
     int min();
     int max();
+    Class<?>[] groups() default {};
 }

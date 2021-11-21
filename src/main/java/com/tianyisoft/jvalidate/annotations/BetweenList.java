@@ -13,4 +13,5 @@ public @interface BetweenList {
     String message() default "%s 长度必须在 %d 和 %d 之间";
     long minLength();
     long maxLength();
+    Class<?>[] groups() default {};
 }

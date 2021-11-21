@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Url {
     String message() default "%s 必须具有有效 url";
+    Class<?>[] groups() default {};
 }

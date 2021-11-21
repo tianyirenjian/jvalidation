@@ -8,7 +8,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 public class UrlValidator extends Validator {
-    public Tuple2<Boolean, String> validate(Url url, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+    public Tuple2<Boolean, String> validate(Url url, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        if (!needValidateByGroups(groups, url.groups())) {
+            return trueResult();
+        }
         Object o = getFieldValue(klass, object, fieldName);
         if (o == null) {
             return trueResult();

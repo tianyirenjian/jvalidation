@@ -32,7 +32,6 @@ public class JDoValidate {
     public Object validate(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
         Map<String, Object> errors = doValidate(collectAnnotationParameters(joinPoint, args));
-        System.out.println(errors);
         if (errors.size() > 0) {
             ObjectMapper objectMapper = new ObjectMapper();
             String json = objectMapper.writeValueAsString(errors);
@@ -41,21 +40,23 @@ public class JDoValidate {
         return joinPoint.proceed(args);
     }
 
-    private Map<Integer, Object> collectAnnotationParameters(ProceedingJoinPoint joinPoint, Object[] args) {
+    private Map<Object, Class<?>[]> collectAnnotationParameters(ProceedingJoinPoint joinPoint, Object[] args) {
         Method method = ((MethodSignature)(joinPoint.getSignature())).getMethod();
         Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-        Map<Integer, Object> needValidate = new HashMap<>();
+        Map<Object, Class<?>[]> needValidate = new HashMap<>();
         for (int i = 0; i < method.getParameterCount(); i++) {
-            if (Arrays.stream(parameterAnnotations[i]).anyMatch(annotation -> annotation instanceof JValidated)) {
-                needValidate.put(i, args[i]);
+            for (Annotation annotation: parameterAnnotations[i]) {
+                if (annotation instanceof JValidated) {
+                    needValidate.put(args[i], ((JValidated) annotation).groups());
+                }
             }
         }
         return needValidate;
     }
 
-    private Map<String, Object> doValidate(Map<Integer, Object> parameters) {
+    private Map<String, Object> doValidate(Map<Object, Class<?>[]> parameters) {
         Map<String, Object> errors = new HashMap<>();
-        parameters.forEach((index, parameter) -> {
+        parameters.forEach((parameter, groups) -> {
             Class<?> klass = parameter.getClass();
             Arrays.stream(klass.getDeclaredFields()).forEach(field -> {
                 List<String> errorList = new ArrayList<>();
@@ -67,11 +68,11 @@ public class JDoValidate {
                         Object validatorInstance = clazz.newInstance();
                         Object result = null;
                         if (annotation.annotationType().isAnnotationPresent(NeedDatabase.class)) {
-                            Method method = clazz.getMethod("validate", annotation.annotationType(), JdbcTemplate.class, Class.class, Object.class, String.class);
-                            result = method.invoke(validatorInstance, annotation, jdbcTemplate, klass, parameter, field.getName());
+                            Method method = clazz.getMethod("validate", annotation.annotationType(), Class[].class, JdbcTemplate.class, Class.class, Object.class, String.class);
+                            result = method.invoke(validatorInstance, annotation, groups, jdbcTemplate, klass, parameter, field.getName());
                         } else {
-                            Method method = clazz.getMethod("validate", annotation.annotationType(), Class.class, Object.class, String.class);
-                            result = method.invoke(validatorInstance, annotation, klass, parameter, field.getName());
+                            Method method = clazz.getMethod("validate", annotation.annotationType(), Class[].class, Class.class, Object.class, String.class);
+                            result = method.invoke(validatorInstance, annotation, groups, klass, parameter, field.getName());
                         }
                         Tuple2<Boolean, String> tuple2 = Tuple2.castFrom(result);
                         if (!tuple2.getV0()) {

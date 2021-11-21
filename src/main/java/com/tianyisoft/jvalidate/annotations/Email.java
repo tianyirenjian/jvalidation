@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Email {
     String message() default "%s 必须是正确的 email 格式";
+    Class<?>[] groups() default {};
 }

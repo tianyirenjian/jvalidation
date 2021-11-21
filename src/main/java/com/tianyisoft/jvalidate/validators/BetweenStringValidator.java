@@ -4,7 +4,10 @@ import com.tianyisoft.jvalidate.annotations.BetweenString;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 
 public class BetweenStringValidator extends Validator {
-    public Tuple2<Boolean, String> validate(BetweenString betweenString, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+    public Tuple2<Boolean, String> validate(BetweenString betweenString, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        if (!needValidateByGroups(groups, betweenString.groups())) {
+            return trueResult();
+        }
         Object o = getFieldValue(klass, object, fieldName);
         if (o == null) {
             return trueResult();

@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Ipv4 {
     String message() default "%s 必须是有效的 ip v4 地址";
+    Class<?>[] groups() default {};
 }

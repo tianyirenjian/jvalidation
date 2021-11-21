@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AlphaDash {
     String message() default "%s 只能包含字母、数字，短破折号（-）和下划线（_）";
+    Class<?>[] groups() default {};
 }
