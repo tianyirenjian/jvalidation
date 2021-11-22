@@ -102,6 +102,7 @@ public class BaseDateValidator extends Validator {
         d1 = new Date(d1.getTime() - TimeZone.getDefault().getRawOffset());
         if (Objects.equals(operator, "gt")) return d1.after(d2);
         if (Objects.equals(operator, "gte")) return d1.after(d2) || d1.equals(d2);
+        if (Objects.equals(operator, "e")) return d1.equals(d2);
         if (Objects.equals(operator, "lt")) return d1.before(d2);
         if (Objects.equals(operator, "lte")) return d1.before(d2) || d1.equals(d2);
         return false;
@@ -110,6 +111,7 @@ public class BaseDateValidator extends Validator {
     private Boolean operatorLocalDate(LocalDate d1, LocalDate d2, String operator) {
         if (Objects.equals(operator, "gt")) return d1.isAfter(d2);
         if (Objects.equals(operator, "gte")) return d1.isAfter(d2) || d1.isEqual(d2);
+        if (Objects.equals(operator, "e")) return d1.isEqual(d2);
         if (Objects.equals(operator, "lt")) return d1.isBefore(d2);
         if (Objects.equals(operator, "lte")) return d1.isBefore(d2) || d1.isEqual(d2);
         return false;
@@ -118,6 +120,7 @@ public class BaseDateValidator extends Validator {
     private Boolean operatorInstant(Instant d1, Instant d2, String operator) {
         if (Objects.equals(operator, "gt")) return d1.isAfter(d2);
         if (Objects.equals(operator, "gte")) return d1.isAfter(d2) || d1.equals(d2);
+        if (Objects.equals(operator, "e")) return d1.equals(d2);
         if (Objects.equals(operator, "lt")) return d1.isBefore(d2);
         if (Objects.equals(operator, "lte")) return d1.isBefore(d2) || d1.equals(d2);
         return false;

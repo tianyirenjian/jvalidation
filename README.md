@@ -111,7 +111,7 @@ class Update{}
 
 - Accepted: 必须是 "yes" ，"on" ，"1" 或 "true"
 - After: 必须是在 date 的日期之后，date 可以是日期值也可以是其他的字段名，当是其他字段时，需要是相同类型
-- AfterOrEqual: 必须大于火等于 date的日期。date 使用同 After
+- AfterOrEqual: 必须大于或等于 date的日期。date 使用同 After
 - Alpha: 必须由字母组成
 - AlphaDash: 只能包含字母、数字，短破折号（-）和下划线（_）组成
 - AlphaNum: 只能由字母和数字组成
@@ -122,6 +122,7 @@ class Update{}
 - BetweenList: 列表长度在 mix 和 max 之间
 - BetweenLong : 在两个长整形数之间
 - BetweenString : 字符串长度在 min 和 max 之间
+- DateEquals: 必须是等于 date 的日期
 - Email: 必须是 email 地址
 - Ip: 必须是 ip 地址， ipv4 或者 ipv6都可以
 - Ipv4: 必须是 ipv4 地址
