@@ -1,6 +1,8 @@
 JValidation
 =======
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.tianyisoft.jvalidate/jvalidation.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.tianyisoft.jvalidate%22%20AND%20a:%22jvalidation%22)
+
 JValidation 是为 spring boot 开发的验证库。集成多种验证，目前正在新增中。
 
 安装方法
