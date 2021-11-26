@@ -1,7 +1,7 @@
 JValidation
 =======
 
-JValidation 是为 spring boot 开发的验证库。集成多种验证，目前正在新增中。
+JValidation 是为 spring boot 开发的验证库。集成多种验证, 主要是参考 Laravel 框架的验证器，然后因为 java 的强类型添加一些额外的验证，目前可用的验证类正在新增中。
 
 安装方法
 ---------------
@@ -10,7 +10,7 @@ JValidation 是为 spring boot 开发的验证库。集成多种验证，目前�
 <dependency>
   <groupId>com.tianyisoft.jvalidate</groupId>
   <artifactId>jvalidation</artifactId>
-  <version>0.2.0</version>
+  <version>0.2.2</version>
 </dependency>
 ```
 
@@ -90,20 +90,42 @@ public class User {
 class Update{}
 ```
 
-当验证失败会返回 400 错误，在消息体返回错误详情:
+当验证失败会返回 422 错误，在消息体返回错误详情:
 
 ```json
 {
+  "message": "The given data was invalid.",
+  "errors": {
+    "score": [
+      "score 必须在 0 和 100 之间"
+    ],
+    "hobbies": [
+      "hobbies 长度必须在 1 和 2 之间"
+    ],
     "ip": [
-        "ip 必须是有效的 ip v4 地址"
+      "ip 不能为空"
     ],
     "name": [
-        "name 只能由字母组成"
+      "name 只能由字母组成",
+      "name 只能包含字母、数字，短破折号（-）和下划线（_）",
+      "name 只能由字母和数字组成",
+      "name 长度必须在 6 和 18 之间"
     ],
-    "weight": [
-        "weight 必须在 30.000000 和 230.000000 之间"
+    "email": [
+      "email 在 users 中已存在"
+    ],
+    "age": [
+      "age 必须在 8 和 70 之间"
     ]
+  }
 }
+```
+
+自 0.2.2 版本开始，返回状态码和错误结构可以自定义修改，只需要创建一个名为 `validateFailedExceptionHandler` 的 bean，然后就可以自己捕获 `ValidateFailedException ` 来自行处理错误了。
+
+```java
+@Bean
+public void validateFailedExceptionHandler() {}
 ```
 
 支持的验证方式

@@ -33,9 +33,7 @@ public class JDoValidate {
         Object[] args = joinPoint.getArgs();
         Map<String, Object> errors = doValidate(collectAnnotationParameters(joinPoint, args));
         if (errors.size() > 0) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            String json = objectMapper.writeValueAsString(errors);
-            throw new ValidateFailedException(HttpStatus.BAD_REQUEST, json);
+            throw new ValidateFailedException(HttpStatus.UNPROCESSABLE_ENTITY, errors);
         }
         return joinPoint.proceed(args);
     }

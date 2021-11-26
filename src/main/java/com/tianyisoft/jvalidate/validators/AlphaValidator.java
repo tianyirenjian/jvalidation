@@ -3,19 +3,17 @@ package com.tianyisoft.jvalidate.validators;
 import com.tianyisoft.jvalidate.annotations.Alpha;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 
-public class AlphaValidator extends Validator {
+public class AlphaValidator extends RegexpValidator {
     public Tuple2<Boolean, String> validate(Alpha alpha, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
         if (!needValidateByGroups(groups, alpha.groups())) {
             return trueResult();
         }
         Object o = getFieldValue(klass, object, fieldName);
-        if (o == null || (o instanceof String && ((String) o).matches(getRegexp()))) {
-            return trueResult();
-        }
-        return falseResult(alpha.message(), fieldName);
+        return validateRegexp(o, regexp() , 0, alpha.message(), fieldName);
     }
 
-    public String getRegexp() {
+    @Override
+    public String regexp() {
         return "^[a-zA-Z]*$";
     }
 }
