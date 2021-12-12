@@ -12,7 +12,7 @@ JValidation 是为 spring boot 开发的验证库。集成多种验证, 主要�
 <dependency>
   <groupId>com.tianyisoft.jvalidate</groupId>
   <artifactId>jvalidation</artifactId>
-  <version>0.2.2</version>
+  <version>0.2.3</version>
 </dependency>
 ```
 
