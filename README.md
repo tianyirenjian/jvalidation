@@ -157,6 +157,9 @@ public void validateFailedExceptionHandler() {}
 - Unique: 不能在数据库重复，需要数据库支持。例如: `@Unique(table = "users", field = "email", excludeKeys = {"id"}, excludeValues = {"39"}, where = " and id != {{id}} ")` 表示 users 表里面的 email 字段不能重复，并且排除 id = 39 的，然后通过 where 语句排除了 id 等于当前对象的 id 值的.
 - Uniques: 用于组合多个 Unique
 - Url: 字段值必须是 url 地址
+- Different: 必须和指定的字段有不同的值，可以选择设置 `strict` 选择严格模式，严格模式使用 `==` 比较，否则使用 `equals` 比较
+- Distinct: 只能用于 list， 要求 list 中不能有重复的值
+- EndsWith: 字符串必须以指定的几个值中的一个结尾
 - 更多规则添加中。。。
 
 
