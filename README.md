@@ -12,7 +12,7 @@ JValidation 是为 spring boot 开发的验证库。集成多种验证, 主要�
 <dependency>
   <groupId>com.tianyisoft.jvalidate</groupId>
   <artifactId>jvalidation</artifactId>
-  <version>0.2.2</version>
+  <version>0.3.0</version>
 </dependency>
 ```
 
@@ -129,6 +129,7 @@ class Update{}
 @Bean
 public void validateFailedExceptionHandler() {}
 ```
+自 0.3.0 开始，当参数含有 `BindingErrors` 类型时，会把错误信息放到里面，不再自动返回 422 错误。用法类似 `BindingResult`。不含有时还按之前的错误逻辑。
 
 支持的验证方式
 -----------------

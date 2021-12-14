@@ -5,6 +5,7 @@ import com.tianyisoft.jvalidate.annotations.JValidate;
 import com.tianyisoft.jvalidate.annotations.JValidated;
 import com.tianyisoft.jvalidate.annotations.NeedDatabase;
 import com.tianyisoft.jvalidate.exceptions.ValidateFailedException;
+import com.tianyisoft.jvalidate.utils.BindingErrors;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -31,9 +32,19 @@ public class JDoValidate {
     @Around("@annotation(com.tianyisoft.jvalidate.annotations.JValidated)")
     public Object validate(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
-        Map<String, Object> errors = doValidate(collectAnnotationParameters(joinPoint, args));
+        Map<String, List<String>> errors = doValidate(collectAnnotationParameters(joinPoint, args));
         if (errors.size() > 0) {
-            throw new ValidateFailedException(HttpStatus.UNPROCESSABLE_ENTITY, errors);
+            boolean hasBindingErrors = false;
+            for (Object arg : args) {
+                if (arg instanceof BindingErrors) {
+                    hasBindingErrors = true;
+                    ((BindingErrors) arg).setErrors(errors);
+                    break;
+                }
+            }
+            if (!hasBindingErrors) {
+                throw new ValidateFailedException(HttpStatus.UNPROCESSABLE_ENTITY, errors);
+            }
         }
         return joinPoint.proceed(args);
     }
@@ -52,8 +63,8 @@ public class JDoValidate {
         return needValidate;
     }
 
-    private Map<String, Object> doValidate(Map<Object, Class<?>[]> parameters) {
-        Map<String, Object> errors = new HashMap<>();
+    private Map<String, List<String>> doValidate(Map<Object, Class<?>[]> parameters) {
+        Map<String, List<String>> errors = new HashMap<>();
         parameters.forEach((parameter, groups) -> {
             Class<?> klass = parameter.getClass();
             Arrays.stream(klass.getDeclaredFields()).forEach(field -> {
