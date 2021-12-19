@@ -38,7 +38,7 @@ public class UniqueValidator extends Validator {
     }
 
     private Tuple2<String, List<Object>> explainWhere(Class<?> klass, Object object, String where) throws NoSuchFieldException, IllegalAccessException {
-        Pattern pattern = Pattern.compile("\\{\\{\\s*([a-zA-Z][a-zA-Z0-9.]*)\\s*}}");
+        Pattern pattern = Pattern.compile("\\{\\{\\s*([a-zA-Z_][a-zA-Z0-9_.]*)\\s*}}");
         Matcher matcher = pattern.matcher(where);
         List<Object> parameters = new ArrayList<>();
         while (matcher.find()) {
