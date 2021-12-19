@@ -1,12 +1,9 @@
 package com.tianyisoft.jvalidate.aops;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.tianyisoft.jvalidate.annotations.JValidate;
+import com.tianyisoft.jvalidate.JValidator;
 import com.tianyisoft.jvalidate.annotations.JValidated;
-import com.tianyisoft.jvalidate.annotations.NeedDatabase;
 import com.tianyisoft.jvalidate.exceptions.ValidateFailedException;
 import com.tianyisoft.jvalidate.utils.BindingErrors;
-import com.tianyisoft.jvalidate.utils.Tuple2;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,9 +13,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Aspect
 @Component
@@ -32,7 +30,7 @@ public class JDoValidate {
     @Around("@annotation(com.tianyisoft.jvalidate.annotations.JValidated)")
     public Object validate(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] args = joinPoint.getArgs();
-        Map<String, List<String>> errors = doValidate(collectAnnotationParameters(joinPoint, args));
+        Map<String, List<String>> errors = JValidator.doValidate(collectAnnotationParameters(joinPoint, args), jdbcTemplate);
         if (errors.size() > 0) {
             boolean hasBindingErrors = false;
             for (Object arg : args) {
@@ -61,41 +59,5 @@ public class JDoValidate {
             }
         }
         return needValidate;
-    }
-
-    private Map<String, List<String>> doValidate(Map<Object, Class<?>[]> parameters) {
-        Map<String, List<String>> errors = new HashMap<>();
-        parameters.forEach((parameter, groups) -> {
-            Class<?> klass = parameter.getClass();
-            Arrays.stream(klass.getDeclaredFields()).forEach(field -> {
-                List<String> errorList = new ArrayList<>();
-                Arrays.stream(field.getAnnotations()).filter(annotation -> {
-                    return Arrays.stream(annotation.annotationType().getAnnotations()).anyMatch(anno -> anno instanceof JValidate);
-                }).forEachOrdered(annotation -> {
-                    try {
-                        Class<?> clazz = Class.forName(annotation.annotationType().getName().replaceFirst(".annotations.", ".validators.") + "Validator");
-                        Object validatorInstance = clazz.newInstance();
-                        Object result = null;
-                        if (annotation.annotationType().isAnnotationPresent(NeedDatabase.class)) {
-                            Method method = clazz.getMethod("validate", annotation.annotationType(), Class[].class, JdbcTemplate.class, Class.class, Object.class, String.class);
-                            result = method.invoke(validatorInstance, annotation, groups, jdbcTemplate, klass, parameter, field.getName());
-                        } else {
-                            Method method = clazz.getMethod("validate", annotation.annotationType(), Class[].class, Class.class, Object.class, String.class);
-                            result = method.invoke(validatorInstance, annotation, groups, klass, parameter, field.getName());
-                        }
-                        Tuple2<Boolean, String> tuple2 = Tuple2.castFrom(result);
-                        if (!tuple2.getV0()) {
-                            errorList.add(tuple2.getV1());
-                        }
-                    } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-                        e.printStackTrace();
-                    }
-                });
-                if (errorList.size() > 0) {
-                    errors.put(field.getName(), errorList);
-                }
-            });
-        });
-        return errors;
     }
 }

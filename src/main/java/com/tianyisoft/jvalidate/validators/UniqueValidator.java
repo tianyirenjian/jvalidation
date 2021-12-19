@@ -44,7 +44,13 @@ public class UniqueValidator extends Validator {
         while (matcher.find()) {
             where = where.replaceFirst(pattern.pattern(), "?");
             String field = matcher.group(1);
-            parameters.add(getFieldValue(klass, object, field));
+            Object value = null;
+            if (field.startsWith("request.")) {
+                value = getValueFromRequest(field);
+            } else {
+                value = getFieldValue(klass, object, field);
+            }
+            parameters.add(value);
         }
         where = where.replace("\\{\\{", "{{");
         return new Tuple2<>(where, parameters);

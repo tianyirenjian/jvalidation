@@ -12,12 +12,15 @@ JValidation 是为 spring boot 开发的验证库。集成多种验证, 主要�
 <dependency>
   <groupId>com.tianyisoft.jvalidate</groupId>
   <artifactId>jvalidation</artifactId>
-  <version>0.3.0</version>
+  <version>0.4.0</version>
 </dependency>
 ```
 
 使用说明
 ----------------
+
+##### 第一种
+
  1. 在 SpringBootApplication 上面添加 `@EnableJValidate` 注解。
  2. 在要使用验证的 controller 的方法上加上 `@Jvalidated` 注解
  3. 在要使用验证的 controller 的方法的参数上加上 `@Jvalidated` 注解, 支持分组
@@ -31,6 +34,14 @@ JValidation 是为 spring boot 开发的验证库。集成多种验证, 主要�
 public User store(@RequestBody @JValidated(groups={xxx.class}) ② User user) {
     return user;
 }
+```
+
+##### 第二种
+从 0.4.0 开始，支持静态调用，即不使用注解的方式，提供了两个方法, 可以返回包含错误的 map，自行处理:
+
+```java
+com.tianyisoft.jvalidate.JValidator.validate(JdbcTemplate jdbcTemplate, Object object, Class<?>[] groups) // 使用数据库
+com.tianyisoft.jvalidate.JValidator.validateWithoutJdbcTemplate(Object object, Class<?>[] groups) // 不使用数据库
 ```
 
 然后在要验证的 User 类添加验证规则，如:
@@ -154,7 +165,10 @@ public void validateFailedExceptionHandler() {}
 - Ipv6: 必须是 ipv6 地址
 - Regexp: 必须符合正则表达式
 - Required: 不可以为 null
-- Unique: 不能在数据库重复，需要数据库支持。例如: `@Unique(table = "users", field = "email", excludeKeys = {"id"}, excludeValues = {"39"}, where = " and id != {{id}} ")` 表示 users 表里面的 email 字段不能重复，并且排除 id = 39 的，然后通过 where 语句排除了 id 等于当前对象的 id 值的.
+- Unique: 不能在数据库重复，需要数据库支持。
+ 例如: `@Unique(table = "users", field = "email", excludeKeys = {"id"}, excludeValues = {"39"}, where = " and id != {{id}} ")` 表示 users 表里面的 email 字段不能重复，并且排除 id = 39 的，然后通过 where 语句排除了 id 等于当前对象的 id 值的.
+ 在where 条件里面可以使用 {{ request.path.id / request.get.id / request.header[s].id }} 这种方式来获取 request 中的信息，这在修改对象的时候特别有用。
+ 
 - Uniques: 用于组合多个 Unique
 - Url: 字段值必须是 url 地址
 - Different: 必须和指定的字段有不同的值，可以选择设置 `strict` 选择严格模式，严格模式使用 `==` 比较，否则使用 `equals` 比较
