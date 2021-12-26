@@ -6,8 +6,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class UniqueValidator extends Validator {
     public Tuple2<Boolean, String> validate(Unique unique, Class<?>[] groups, JdbcTemplate jdbcTemplate, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
@@ -22,37 +20,13 @@ public class UniqueValidator extends Validator {
         parameters.add(o);
         Tuple2<String, List<Object>> where = explainWhere(klass, object, unique.where());
         parameters.addAll(where.getV1());
-        StringBuilder sql = new StringBuilder("select count(*) as aggregate from " + unique.table() + " where `" + unique.field() + "` = ? " + where.getV0());
-        if (unique.excludeKeys().length != 0 && unique.excludeKeys().length == unique.excludeValues().length) {
-            for (int i = 0; i < unique.excludeKeys().length; i ++) {
-                sql.append(" and `").append(unique.excludeKeys()[i]).append("` != ?");
-                parameters.add(unique.excludeValues()[i]);
-            }
-        }
 
-        Long count = jdbcTemplate.queryForObject(sql.toString(), Long.class, parameters.toArray());
+        String sql = "select count(*) as aggregate from " + unique.table() + " where `" + unique.field() + "` = ? " + where.getV0();
+
+        Long count = jdbcTemplate.queryForObject(sql, Long.class, parameters.toArray());
         if (count != null && count == 0L) {
             return trueResult();
         }
         return falseResult(unique.message(), fieldName, unique.table());
-    }
-
-    private Tuple2<String, List<Object>> explainWhere(Class<?> klass, Object object, String where) throws NoSuchFieldException, IllegalAccessException {
-        Pattern pattern = Pattern.compile("\\{\\{\\s*([a-zA-Z_][a-zA-Z0-9_.]*)\\s*}}");
-        Matcher matcher = pattern.matcher(where);
-        List<Object> parameters = new ArrayList<>();
-        while (matcher.find()) {
-            where = where.replaceFirst(pattern.pattern(), "?");
-            String field = matcher.group(1);
-            Object value = null;
-            if (field.startsWith("request.")) {
-                value = getValueFromRequest(field);
-            } else {
-                value = getFieldValue(klass, object, field);
-            }
-            parameters.add(value);
-        }
-        where = where.replace("\\{\\{", "{{");
-        return new Tuple2<>(where, parameters);
     }
 }

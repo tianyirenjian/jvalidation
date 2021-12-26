@@ -7,11 +7,9 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public abstract class Validator {
@@ -84,5 +82,32 @@ public abstract class Validator {
     private Object getRequestHeaderParameter(HttpServletRequest request, String key) {
         String value = request.getHeader(key);
         return value != null ? value : "";
+    }
+
+    protected Tuple2<String, List<Object>> explainWhere(Class<?> klass, Object object, String where) throws NoSuchFieldException, IllegalAccessException {
+        Pattern pattern = Pattern.compile("\\{\\{\\s*([a-zA-Z_][a-zA-Z0-9_.]*)\\s*}}");
+        Matcher matcher = pattern.matcher(where);
+        List<Object> parameters = new ArrayList<>();
+        while (matcher.find()) {
+            where = where.replaceFirst(pattern.pattern(), "?");
+            String field = matcher.group(1);
+            Object value = null;
+            if (field.startsWith("request.")) {
+                value = getValueFromRequest(field);
+            } else {
+                value = getFieldValue(klass, object, field);
+            }
+            parameters.add(value);
+        }
+        where = where.replace("\\{\\{", "{{");
+        return new Tuple2<>(where, parameters);
+    }
+
+    protected Object tryDoubleToLong(Double d) {
+        Object od = d;
+        if (d == Math.floor(d)) {
+            od = ((Number)d).longValue();
+        }
+        return od;
     }
 }

@@ -6,11 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @JValidate
-@Target(ElementType.FIELD)
+@NeedDatabase
 @Retention(RetentionPolicy.RUNTIME)
-public @interface BetweenString {
-    String message() default "%s 长度必须在 %d 和 %d 之间";
-    int min();
-    int max();
+@Target(ElementType.FIELD)
+public @interface ExistsGroup {
+    Exists[] value();
     Class<?>[] groups() default {};
 }
