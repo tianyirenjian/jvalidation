@@ -186,6 +186,9 @@ public void validateFailedExceptionHandler() {}
 ##### AlphaNum
 只能由字母和数字组成
 
+##### Bail
+当遇到第一个失败时，停止后续验证，只针对当前字段，其他字段还会继续验证，为了正常使用，请放到字段验证器的第一个
+
 ##### Before
 与 AfterOrEqual 相反
 
