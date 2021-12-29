@@ -231,6 +231,12 @@ public void validateFailedExceptionHandler() {}
 ##### Ipv6
 必须是 ipv6 地址
 
+##### Max
+当字段为数字时，表示最大值，当字段为字符串、数组或 Collection 的子类时，表示最大长度
+
+##### Min
+当字段为数字时，表示最小值，当字段为字符串、数组或 Collection 的子类时，表示最小长度
+
 ##### Regexp
 必须符合正则表达式
 
