@@ -24,7 +24,7 @@ public class EndsWithValidator extends Validator {
         if (end.get()) {
             return trueResult();
         } else {
-            return falseResult(endsWith.message(), fieldName, String.join(", ", endsWith.ends()));
+            return falseResult(endsWith.message(), fieldName, String.join(", ", Arrays.toString(endsWith.ends())));
         }
     }
 }

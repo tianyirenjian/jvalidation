@@ -12,7 +12,7 @@ JValidation 是为 spring boot 开发的验证库。集成多种验证, 主要�
 <dependency>
   <groupId>com.tianyisoft.jvalidate</groupId>
   <artifactId>jvalidation</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
@@ -205,7 +205,7 @@ public void validateFailedExceptionHandler() {}
 必须和指定的字段有不同的值，可以选择设置 `strict` 选择严格模式，严格模式使用 `==` 比较，否则使用 `equals` 比较
 
 ##### Distinct
-只能用于 list， 要求 list 中不能有重复的值
+只能用于 list 或数组， 要求其中不能有重复的值
 
 ##### Email
 必须是 email 地址
@@ -242,6 +242,9 @@ public void validateFailedExceptionHandler() {}
 
 ##### Required
 不可以为 null
+
+##### StartsWith
+字符串必须以指定的几个值中的一个开头
 
 ##### Unique
 不能在数据库重复，需要数据库支持。
