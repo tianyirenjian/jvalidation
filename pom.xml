@@ -6,7 +6,7 @@
 
   <groupId>com.tianyisoft.jvalidate</groupId>
   <artifactId>jvalidation</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
 
   <description>A library for spring boot validation.</description>
 

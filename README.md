@@ -12,7 +12,7 @@ JValidation 是为 spring boot 开发的验证库。集成多种验证, 主要�
 <dependency>
   <groupId>com.tianyisoft.jvalidate</groupId>
   <artifactId>jvalidation</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
 </dependency>
 ```
 
@@ -31,7 +31,7 @@ JValidation 是为 spring boot 开发的验证库。集成多种验证, 主要�
 ```java
 @JValidated ①
 @PostMapping("/users")
-public User store(@RequestBody @JValidated(groups={xxx.class}) ② User user) {
+public User store(@RequestBody @JValidated ② User user) {
     return user;
 }
 ```
@@ -69,7 +69,7 @@ import java.util.List;
 public class User {
     private Long id;
     @Bail
-    @Required(message = "%s 嫑为空")
+    @Required(message = "%s 不要为空")
     @Alpha
     @AlphaDash
     @AlphaNum
@@ -221,6 +221,9 @@ public void validateFailedExceptionHandler() {}
 表示 users 表里面的 email 字段必须等于当前字段值，通过 where 语句排除了 id 等于当前对象的 id 值的.
 
 在where 条件里面可以使用 {{ request.path.id / request.get.id / request.header[s].id }} 这种方式来获取 request 中的信息，这在修改对象的时候特别有用。
+
+##### In
+验证字符串必须在给定的值中
 
 ##### Ip
 必须是 ip 地址， ipv4 或者 ipv6都可以
