@@ -261,6 +261,7 @@ import com.tianyisoft.jvalidate.annotations.RequiredIf;
 public class User {
     @RequiredIf(condition = NameCondition.class, params = {"foo", "{{ this }}", "{{ bar }}"})
     private String name;
+    // getters and setters
 }
 
 class NameCondition implements Condition {
