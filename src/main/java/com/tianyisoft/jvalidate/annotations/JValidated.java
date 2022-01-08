@@ -14,6 +14,7 @@ import java.lang.annotation.Target;
 public @interface JValidated {
     /**
      * 验证分组，通过和具体验证器的分组做运算确定是否需要验证
+     *
      * @return 分组类的数组
      */
     Class<?>[] groups() default {};

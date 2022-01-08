@@ -3,7 +3,7 @@ JValidation
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.tianyisoft.jvalidate/jvalidation.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.tianyisoft.jvalidate%22%20AND%20a:%22jvalidation%22)
 
-JValidation 是为 spring boot 开发的验证库。集成多种验证, 主要是参考 Laravel 框架的验证器，然后因为 java 的强类型添加一些额外的验证，目前可用的验证类正在新增中。
+JValidation 是为 spring boot 开发的验证库。内置多种验证器, 主要是参考 Laravel 框架的验证器，然后因为 java 的强类型添加一些额外的验证，目前可用的验证类正在新增中。
 
 安装方法
 ---------------
@@ -12,7 +12,7 @@ JValidation 是为 spring boot 开发的验证库。集成多种验证, 主要�
 <dependency>
   <groupId>com.tianyisoft.jvalidate</groupId>
   <artifactId>jvalidation</artifactId>
-  <version>1.2.0</version>
+  <version>1.3.0</version>
 </dependency>
 ```
 
@@ -244,7 +244,34 @@ public void validateFailedExceptionHandler() {}
 必须符合正则表达式
 
 ##### Required
-不可以为 null
+不可以为 null, 当 allowEmpty 为 false 时，字符串不能为空，数组或 Collection 对象长度不能为 0
+
+##### RequiredIf
+当满足条件时进行 Required 验证，接受一个 Condition 的实现类，使用类中的 needValidate 方法判断是否需要 Required 验证
+
+Condition 接口的 needValidate 方法接受 Object[] 的参数，参数可以通过 RequiredIf 验证器的 params 传递， params 可以直接传递字符串，
+也可以传递 {{ this }} 表示当前对象， {{ xxx }} 表示当前对象的其他字段，
+或者使用 {{ request.path.id / request.get.id / request.header[s].id }} 这种方式来获取 request 中的信息
+
+示例:
+
+```java
+import com.tianyisoft.jvalidate.annotations.RequiredIf;
+
+public class User {
+    @RequiredIf(condition = NameCondition.class, params = {"foo", "{{ this }}", "{{ bar }}"})
+    private String name;
+}
+
+class NameCondition implements Condition {
+    @override
+    public Boolean needValidate(Object[] args) {
+        System.out.println(Arrays.toString(args)); // 查看传递过来的参数
+        // 根据参数判断是否要验证
+        return true;
+    }
+}
+```
 
 ##### StartsWith
 字符串必须以指定的几个值中的一个开头
