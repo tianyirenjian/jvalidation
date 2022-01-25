@@ -28,7 +28,7 @@ public @interface RequiredIf {
      *
      * @return 是否允许空
      */
-    boolean allowEmpty() default true;
+    boolean allowEmpty() default false;
 
     /**
      * 判断是否需要验证 required 的类，这个类要实现 Condition 接口，验证类会调用里面的 needValidate 方法来判断是否进行验证
