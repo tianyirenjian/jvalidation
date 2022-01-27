@@ -26,21 +26,21 @@ JValidation 是为 spring boot 开发的验证库。内置多种验证器, 主�
  3. 在要使用验证的 controller 的方法的参数上加上 `@Jvalidated` 注解, 支持分组
  4. 然后就可以在要验证的类里面写各种验证规则了
 
-如下代码中 ① ②:
+如下代码:
 
 ```java
-@JValidated ①
+@JValidated
 @PostMapping("/users")
-public User store(@RequestBody @JValidated ② User user) {
+public User store(@RequestBody @JValidated User user) {
     return user;
 }
 ```
 
 上面代码验证错误时会返回 422 错误，如果想自己处理错误，可以使用一个 BindingErrors 类接收到错误信息:
 ```java
-@JValidated ①
+@JValidated
 @PostMapping("/users")
-public User store(@RequestBody @JValidated(groups={xxx.class}) ② User user, BindingErrors bindingErrors) {
+public User store(@RequestBody @JValidated(groups={xxx.class}) User user, BindingErrors bindingErrors) {
     if (bindingErrors.hasErrors()) {
         //...
     }
