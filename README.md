@@ -56,7 +56,10 @@ com.tianyisoft.jvalidate.JValidator.validate(JdbcTemplate jdbcTemplate, Object o
 com.tianyisoft.jvalidate.JValidator.validateWithoutJdbcTemplate(Object object, Class<?>[] groups) // 不使用数据库
 ```
 
-然后在要验证的 User 类添加验证规则，如:
+开始验证
+-------------
+
+在要验证的 User 类添加验证规则，如:
 
 ```java
 
