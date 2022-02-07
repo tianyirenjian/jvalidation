@@ -7,8 +7,10 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class InValidator extends Validator{
-    public Tuple2<Boolean, String> validate(In in, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        if (!needValidateByGroups(groups, in.groups())) {
+    public Tuple2<Boolean, String> validate(In in, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+            throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+
+        if (notNeedValidate(groups, in.groups(), in.condition(), klass, object, in.params())) {
             return trueResult();
         }
         Object o = getFieldValue(klass, object, fieldName);

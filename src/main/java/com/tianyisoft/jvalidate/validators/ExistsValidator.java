@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExistsValidator extends Validator {
-    public Tuple2<Boolean, String> validate(Exists exists, Class<?>[] groups, JdbcTemplate jdbcTemplate, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        if (!needValidateByGroups(groups, exists.groups())) {
+    public Tuple2<Boolean, String> validate(Exists exists, Class<?>[] groups, JdbcTemplate jdbcTemplate, Class<?> klass, Object object, String fieldName)
+            throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+
+        if (notNeedValidate(groups, exists.groups(), exists.condition(), klass, object, exists.params())) {
             return trueResult();
         }
         Object o = getFieldValue(klass, object, fieldName);

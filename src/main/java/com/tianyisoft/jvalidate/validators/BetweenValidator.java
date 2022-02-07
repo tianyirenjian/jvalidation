@@ -4,8 +4,10 @@ import com.tianyisoft.jvalidate.annotations.Between;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 
 public class BetweenValidator extends BaseLengthValidator {
-    public Tuple2<Boolean, String> validate(Between between, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        if (!needValidateByGroups(groups, between.groups())) {
+    public Tuple2<Boolean, String> validate(Between between, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+            throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+
+        if (notNeedValidate(groups, between.groups(), between.condition(), klass, object, between.params())) {
             return trueResult();
         }
         Object o = getFieldValue(klass, object, fieldName);

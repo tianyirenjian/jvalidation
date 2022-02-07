@@ -8,8 +8,10 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class UniqueGroupValidator extends UniqueValidator {
-    public Tuple2<Boolean, String> validate(UniqueGroup uniqueGroup, Class<?>[] groups, JdbcTemplate jdbcTemplate, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        if (!needValidateByGroups(groups, uniqueGroup.groups())) {
+    public Tuple2<Boolean, String> validate(UniqueGroup uniqueGroup, Class<?>[] groups, JdbcTemplate jdbcTemplate, Class<?> klass, Object object, String fieldName)
+            throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+
+        if (notNeedValidate(groups, uniqueGroup.groups(), uniqueGroup.condition(), klass, object, uniqueGroup.params())) {
             return trueResult();
         }
         Object o = getFieldValue(klass, object, fieldName);

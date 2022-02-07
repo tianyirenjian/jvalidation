@@ -6,8 +6,8 @@ import com.tianyisoft.jvalidate.utils.Tuple2;
 import java.util.Collection;
 
 public class RequiredValidator extends Validator {
-    public Tuple2<Boolean, String> validate(Required required, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        if (!needValidateByGroups(groups, required.groups())) {
+    public Tuple2<Boolean, String> validate(Required required, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+        if (notNeedValidate(groups, required.groups(), required.condition(), klass, object, required.params())) {
             return trueResult();
         }
         Object o = getFieldValue(klass, object, fieldName);

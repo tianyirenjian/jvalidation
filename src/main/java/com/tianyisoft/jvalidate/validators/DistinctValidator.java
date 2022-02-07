@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.Set;
 
 public class DistinctValidator extends Validator {
-    public Tuple2<Boolean, String> validate(Distinct distinct, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        if (!needValidateByGroups(groups, distinct.groups())) {
+    public Tuple2<Boolean, String> validate(Distinct distinct, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+            throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+
+        if (notNeedValidate(groups, distinct.groups(), distinct.condition(), klass, object, distinct.params())) {
             return trueResult();
         }
         Object o = getFieldValue(klass, object, fieldName);

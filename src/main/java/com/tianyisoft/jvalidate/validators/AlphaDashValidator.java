@@ -4,8 +4,10 @@ import com.tianyisoft.jvalidate.annotations.AlphaDash;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 
 public class AlphaDashValidator extends RegexpValidator {
-    public Tuple2<Boolean, String> validate(AlphaDash alphaDash, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        if (!needValidateByGroups(groups, alphaDash.groups())) {
+    public Tuple2<Boolean, String> validate(AlphaDash alphaDash, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+            throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+
+        if (notNeedValidate(groups, alphaDash.groups(), alphaDash.condition(), klass, object, alphaDash.params())) {
             return trueResult();
         }
         Object o = getFieldValue(klass, object, fieldName);

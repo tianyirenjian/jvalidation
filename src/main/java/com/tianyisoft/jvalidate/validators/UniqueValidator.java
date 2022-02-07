@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UniqueValidator extends Validator {
-    public Tuple2<Boolean, String> validate(Unique unique, Class<?>[] groups, JdbcTemplate jdbcTemplate, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        if (!needValidateByGroups(groups, unique.groups())) {
+    public Tuple2<Boolean, String> validate(Unique unique, Class<?>[] groups, JdbcTemplate jdbcTemplate, Class<?> klass, Object object, String fieldName)
+            throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+
+        if (notNeedValidate(groups, unique.groups(), unique.condition(), klass, object, unique.params())) {
             return trueResult();
         }
         Object o = getFieldValue(klass, object, fieldName);

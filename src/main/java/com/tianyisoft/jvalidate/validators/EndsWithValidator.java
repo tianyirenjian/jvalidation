@@ -7,8 +7,10 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EndsWithValidator extends Validator {
-    public Tuple2<Boolean, String> validate(EndsWith endsWith, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        if (!needValidateByGroups(groups, endsWith.groups())) {
+    public Tuple2<Boolean, String> validate(EndsWith endsWith, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+            throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+
+        if (notNeedValidate(groups, endsWith.groups(), endsWith.condition(), klass, object, endsWith.params())) {
             return trueResult();
         }
         Object o = getFieldValue(klass, object, fieldName);

@@ -3,7 +3,7 @@ JValidation
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.tianyisoft.jvalidate/jvalidation.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.tianyisoft.jvalidate%22%20AND%20a:%22jvalidation%22)
 
-JValidation 是为 spring boot 开发的验证库。内置多种验证器, 主要是参考 Laravel 框架的验证器，然后因为 java 的强类型添加一些额外的验证，目前可用的验证类正在新增中。
+JValidation 是为 spring boot 开发的验证库。内置多种验证器, 主要是参考 Laravel 框架的验证器。目前可用的验证类正在新增中。
 
 安装方法
 ---------------
@@ -12,7 +12,7 @@ JValidation 是为 spring boot 开发的验证库。内置多种验证器, 主�
 <dependency>
   <groupId>com.tianyisoft.jvalidate</groupId>
   <artifactId>jvalidation</artifactId>
-  <version>1.3.1</version>
+  <version>1.4.0</version>
 </dependency>
 ```
 
@@ -67,55 +67,35 @@ import java.util.Date;
 import java.util.List;
 
 public class User {
-    private Long id;
-    @Bail
-    @Required(message = "%s 不要为空")
-    @Alpha
-    @AlphaDash
-    @AlphaNum
-    @Between(min = 1, max = 3)
+    @Bail // name 验证第一次失败时不再继续验证 name。不影响其他字段
+    @Required(message = "%s 不要为空") // 验证不为null， 字符串不等于空字符串，数组或 Collection 对象长度大于 0
+    @Alpha // 只允许字母
+    @Between(min = 6, max = 10) // 长度在 6 - 10 之间
     private String name;
     @Required
-    @Url
-    @Different(field = "name")
+    @Url // 是一个合法的 url 地址
     private String homepage;
     @Required
-    @Email
-    @Regexp(rule = "^(?=.{1,64}@)[A-Za-z0-9\\+_-]+(\\.[A-Za-z0-9\\+_-]+)*@[^-][A-Za-z0-9\\+-]+(\\.[A-Za-z0-9\\+-]+)*(\\.[A-Za-z]{2,})$")
-    @Unique(table = "users", field = "email")
-    @Unique(table = "users", field = "email", where = " and id != {{ request.path.id }} ")
-    @Exists(table = "users", field = "email", where = " and id != {{ request.path.id }}")
-    @EndsWith(ends = {"com", "cc"})
+    @Email // 是合法的 email 地址
+    @Unique(table = "users", field = "email", groups = {Create.class}) // 验证在数据库不重复, 在创建时
+    @Unique(table = "users", field = "email", groups = {Update.class}, where = " and id != {{ request.path.id }} ") // 验证在数据库不重复，除去 id 等于 request 的 path 参数 id, 在修改时用
+    @EndsWith(ends = {"com", "cc"}) // 以 com 或 cc 结尾
     private String email;
-    @After(date = "1980-01-01")
-    @AfterOrEqual(date = "1980-01-01")
-    @Before(date = "2003-12-31")
-    @BeforeOrEqual(date = "2003-12-31")
-    @DateEquals(date = "1990-01-15")
+    @AfterOrEqual(date = "1980-01-01") // 日期大于等于指定日期
+    @BeforeOrEqual(date = "2013-12-31") // 日期小于等于指定日期
     private Date birthday;
-    @After(date = "1980-01-01")
-    @AfterOrEqual(date = "1980-01-01")
-    private LocalDate birthday1;
-    @After(date = "1980-01-01T00:00:00.000Z")
-    @AfterOrEqual(date = "1980-01-01T00:00:00.000Z")
+    @After(date = "1980-01-01T00:00:00.000Z")  // 日期大于等于指定日期, 字段类型为 Instant
+    @AfterOrEqual(date = "1980-01-01T00:00:00.000Z") // 日期小于等于指定日期, 字段类型为 Instant
     private Instant birthday2;
 
-    @Between(min = 8, max = 70)
+    @Between(min = 8, max = 70) // 年龄在 8 - 70 之间
     private Integer age;
-    @Required
-    @Between(min = 30.0, max = 230.0)
-    private Double weight;
-    @Min(0)
-    @Max(100)
+    @Min(0) // 最小值
+    @Max(100) // 最大值
     private Long score;
-    @Between(min= 1, max= 2)
-    @Distinct
+    @Distinct // 不允许有重复值
+    @Between(min= 1, max= 2) // 长度限制
     private List<String> hobbies;
-    @Required
-    @Ip
-    @Ipv4(groups = Update.class)
-    @Ipv6
-    private String ip;
 
  // getters and setters
 }
@@ -129,7 +109,7 @@ class Update{}
     "message": "The given data was invalid.",
     "errors": {
         "birthday": [
-            "birthday 必须是等于 1990-01-15 的日期"
+            "birthday 必须是大于或等于 1980-01-01 的日期"
         ],
         "score": [
             "score 不能大于 100"
@@ -137,18 +117,11 @@ class Update{}
         "hobbies": [
             "hobbies 必须在 1 和 2 之间"
         ],
-        "ip": [
-            "ip 必须是有效的 ip v4 地址"
-        ],
         "name": [
             "name 只能由字母组成"
         ],
-        "weight": [
-            "weight 必须在 30 和 230 之间"
-        ],
         "email": [
-            "email 在 users 中已存在",
-            "email 必须在表 users 中已存在"
+            "email 在 users 中已存在"
         ],
         "age": [
             "age 必须在 8 和 70 之间"
@@ -164,6 +137,37 @@ class Update{}
 public void validateFailedExceptionHandler() {}
 ```
 当参数含有 `BindingErrors` 类型时，会把错误信息放到里面，不再自动返回 422 错误。用法类似 `BindingResult`。不含有时还按之前的错误逻辑。
+
+
+根据条件决定是否要验证
+-----------------
+
+所有的验证器都可以接受一个 Condition 的实现类，使用类中的 needValidate 方法判断是否需要验证
+
+Condition 接口的 needValidate 方法接受 Object[] 的参数，参数可以通过验证器的 params 传递， params 可以直接传递字符串，
+也可以传递 {{ this }} 表示当前对象， {{ xxx }} 表示当前对象的其他字段，
+或者使用 {{ request.path.id / request.get.id / request.header[s].id }} 这种方式来获取 request 中的信息
+
+示例:
+
+```java
+import com.tianyisoft.jvalidate.annotations.RequiredIf;
+
+public class User {
+    @Required(condition = NameCondition.class, params = {"foo", "{{ this }}", "{{ bar }}"})
+    private String name;
+    // getters and setters
+}
+
+class NameCondition implements Condition {
+    @override
+    public Boolean needValidate(Object[] args) {
+        System.out.println(Arrays.toString(args)); // 查看传递过来的参数
+        // 根据参数判断是否要验证
+        return true;
+    }
+}
+```
 
 支持的验证方式
 -----------------
@@ -240,6 +244,9 @@ public void validateFailedExceptionHandler() {}
 ##### Min
 当字段为数字时，表示最小值，当字段为字符串、数组或 Collection 的子类时，表示最小长度
 
+##### NotRegexp
+必须不符合正则表达式
+
 ##### Regexp
 必须符合正则表达式
 
@@ -247,32 +254,7 @@ public void validateFailedExceptionHandler() {}
 不可以为 null, 当 allowEmpty 为 false 时，字符串不能为空，数组或 Collection 对象长度不能为 0
 
 ##### RequiredIf
-当满足条件时进行 Required 验证，接受一个 Condition 的实现类，使用类中的 needValidate 方法判断是否需要 Required 验证
-
-Condition 接口的 needValidate 方法接受 Object[] 的参数，参数可以通过 RequiredIf 验证器的 params 传递， params 可以直接传递字符串，
-也可以传递 {{ this }} 表示当前对象， {{ xxx }} 表示当前对象的其他字段，
-或者使用 {{ request.path.id / request.get.id / request.header[s].id }} 这种方式来获取 request 中的信息
-
-示例:
-
-```java
-import com.tianyisoft.jvalidate.annotations.RequiredIf;
-
-public class User {
-    @RequiredIf(condition = NameCondition.class, params = {"foo", "{{ this }}", "{{ bar }}"})
-    private String name;
-    // getters and setters
-}
-
-class NameCondition implements Condition {
-    @override
-    public Boolean needValidate(Object[] args) {
-        System.out.println(Arrays.toString(args)); // 查看传递过来的参数
-        // 根据参数判断是否要验证
-        return true;
-    }
-}
-```
+已废弃，可以直接使用 Required 实现
 
 ##### StartsWith
 字符串必须以指定的几个值中的一个开头

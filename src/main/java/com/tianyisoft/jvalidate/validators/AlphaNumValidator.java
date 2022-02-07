@@ -4,8 +4,10 @@ import com.tianyisoft.jvalidate.annotations.AlphaNum;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 
 public class AlphaNumValidator extends RegexpValidator {
-    public Tuple2<Boolean, String> validate(AlphaNum alphaNum, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        if (!needValidateByGroups(groups, alphaNum.groups())) {
+    public Tuple2<Boolean, String> validate(AlphaNum alphaNum, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+            throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+
+        if (notNeedValidate(groups, alphaNum.groups(), alphaNum.condition(), klass, object, alphaNum.params())) {
             return trueResult();
         }
         Object o = getFieldValue(klass, object, fieldName);

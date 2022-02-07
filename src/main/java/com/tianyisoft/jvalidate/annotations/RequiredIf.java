@@ -15,6 +15,7 @@ import java.lang.annotation.Target;
 @JValidate
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
+@Deprecated
 public @interface RequiredIf {
     /**
      * 验证失败时返回的错误描述

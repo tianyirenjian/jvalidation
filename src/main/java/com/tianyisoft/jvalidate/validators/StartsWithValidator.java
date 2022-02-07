@@ -7,8 +7,10 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StartsWithValidator extends Validator {
-    public Tuple2<Boolean, String> validate(StartsWith startsWith, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        if (!needValidateByGroups(groups, startsWith.groups())) {
+    public Tuple2<Boolean, String> validate(StartsWith startsWith, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+            throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+
+        if (notNeedValidate(groups, startsWith.groups(), startsWith.condition(), klass, object, startsWith.params())) {
             return trueResult();
         }
         Object o = getFieldValue(klass, object, fieldName);

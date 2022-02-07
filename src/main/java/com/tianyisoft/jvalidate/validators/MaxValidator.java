@@ -4,8 +4,10 @@ import com.tianyisoft.jvalidate.annotations.Max;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 
 public class MaxValidator extends BaseLengthValidator {
-    public Tuple2<Boolean, String> validate(Max max, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        if (!needValidateByGroups(groups, max.groups())) {
+    public Tuple2<Boolean, String> validate(Max max, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+            throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+
+        if (notNeedValidate(groups, max.groups(), max.condition(), klass, object, max.params())) {
             return trueResult();
         }
         Object o = getFieldValue(klass, object, fieldName);

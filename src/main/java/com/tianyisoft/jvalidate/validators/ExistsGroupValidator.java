@@ -8,14 +8,16 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ExistsGroupValidator extends ExistsValidator {
-    public Tuple2<Boolean, String> validate(ExistsGroup ExistsGroup, Class<?>[] groups, JdbcTemplate jdbcTemplate, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        if (!needValidateByGroups(groups, ExistsGroup.groups())) {
+    public Tuple2<Boolean, String> validate(ExistsGroup existsGroup, Class<?>[] groups, JdbcTemplate jdbcTemplate, Class<?> klass, Object object, String fieldName)
+            throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+
+        if (notNeedValidate(groups, existsGroup.groups(), existsGroup.condition(), klass, object, existsGroup.params())) {
             return trueResult();
         }
         Object o = getFieldValue(klass, object, fieldName);
         StringBuilder builder = new StringBuilder();
         AtomicBoolean b = new AtomicBoolean(true);
-        Arrays.stream(ExistsGroup.value()).forEach(exists -> {
+        Arrays.stream(existsGroup.value()).forEach(exists -> {
             try {
                 Tuple2<Boolean, String> result = validate(exists, groups, jdbcTemplate, klass, object, fieldName);
                 if (!result.getV0()) {
