@@ -132,7 +132,7 @@ public abstract class Validator {
 
     protected Boolean notNeedValidateByCondition(Class<? extends Condition> condition, Class<?> klass, Object object, String[] params) throws InstantiationException, IllegalAccessException, NoSuchFieldException {
         if (condition.equals(Condition.class)) {
-            return true;
+            return false;
         }
         Condition instance = condition.newInstance();
         return !instance.needValidate(conditionParameters(klass, object, params));

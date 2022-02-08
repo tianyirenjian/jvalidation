@@ -25,7 +25,7 @@ public class ExistsGroupValidator extends ExistsValidator {
                     builder.append(",");
                 }
                 b.set(b.get() && result.getV0());
-            } catch (NoSuchFieldException | IllegalAccessException e) {
+            } catch (NoSuchFieldException | IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
             }
         });
