@@ -1,6 +1,7 @@
 JValidation
 =======
 
+[![License](https://img.shields.io/badge/license-apache2.0-green.svg)](https://github.com/tianyirenjian/jvalidation/blob/master/LICENSE)
 [![Maven Central](https://img.shields.io/maven-central/v/com.tianyisoft.jvalidate/jvalidation.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.tianyisoft.jvalidate%22%20AND%20a:%22jvalidation%22)
 
 JValidation 是为 spring boot 开发的验证库。内置多种验证器, 主要是参考 Laravel 框架的验证器。目前可用的验证类正在新增中。
