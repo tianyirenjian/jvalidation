@@ -4,6 +4,7 @@ import com.tianyisoft.jvalidate.annotations.Required;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 
 import java.util.Collection;
+import java.util.regex.Pattern;
 
 public class RequiredValidator extends Validator {
     public Tuple2<Boolean, String> validate(Required required, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException, InstantiationException {
@@ -11,10 +12,10 @@ public class RequiredValidator extends Validator {
             return trueResult();
         }
         Object o = getFieldValue(klass, object, fieldName);
-        return validateRequired(o, required.allowEmpty(), required.message(), fieldName);
+        return validateRequired(o, required.allowEmpty(), required.allowBlank(), required.message(), fieldName);
     }
 
-    protected Tuple2<Boolean, String> validateRequired(Object o, Boolean allowEmpty, String message, String fieldName) {
+    protected Tuple2<Boolean, String> validateRequired(Object o, Boolean allowEmpty, Boolean allowBlank, String message, String fieldName) {
         if (o == null) {
             return falseResult(message, fieldName);
         }
@@ -28,6 +29,13 @@ public class RequiredValidator extends Validator {
             }
             if (o instanceof Collection && ((Collection<?>) o).size() == 0) {
                 return falseResult(message, fieldName);
+            }
+        }
+        if (!allowBlank) {
+            if (o instanceof String) {
+                if (Pattern.compile("^\\s+$").matcher((String) o).matches()) {
+                    return falseResult(message, fieldName);
+                }
             }
         }
         return trueResult();

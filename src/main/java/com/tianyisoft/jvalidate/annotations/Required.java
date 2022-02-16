@@ -30,6 +30,12 @@ public @interface Required {
     boolean allowEmpty() default false;
 
     /**
+     * 是否允许为空字符串，只有类型是字符串时起作用
+     * @return 是否允许为空字符串
+     */
+    boolean allowBlank() default false;
+
+    /**
      * 判断是否需要进行验证的类，这个类要实现 Condition 接口，验证类会调用里面的 needValidate 方法来判断是否进行验证
      * needValidate 方法的参数可以通过 params 传递进去
      *

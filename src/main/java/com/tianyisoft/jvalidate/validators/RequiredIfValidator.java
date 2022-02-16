@@ -10,6 +10,6 @@ public class RequiredIfValidator extends RequiredValidator {
         }
 
         Object o = getFieldValue(klass, object, fieldName);
-        return validateRequired(o, requiredIf.allowEmpty(), requiredIf.message(), fieldName);
+        return validateRequired(o, requiredIf.allowEmpty(), requiredIf.allowBlank(), requiredIf.message(), fieldName);
     }
 }
