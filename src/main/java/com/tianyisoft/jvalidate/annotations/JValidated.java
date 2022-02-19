@@ -18,4 +18,12 @@ public @interface JValidated {
      * @return 分组类的数组
      */
     Class<?>[] groups() default {};
+
+    /**
+     * 指定数据源名称，不指定则使用默认数据源
+     * 如果特别指定为系统默认数据源，一般名字为 dataSource，默认情况不需要指定
+     *
+     * @return 数据源的 bean 名称
+     */
+    String datasourceName() default "";
 }

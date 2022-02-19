@@ -4,7 +4,7 @@ JValidation
 [![License](https://img.shields.io/badge/license-apache2.0-green.svg)](https://github.com/tianyirenjian/jvalidation/blob/master/LICENSE)
 [![Maven Central](https://img.shields.io/maven-central/v/com.tianyisoft.jvalidate/jvalidation.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.tianyisoft.jvalidate%22%20AND%20a:%22jvalidation%22)
 
-JValidation 是为 spring boot 开发的验证库。内置多种验证器, 主要是参考 Laravel 框架的验证器。目前可用的验证类正在新增中。
+JValidation 是为 spring boot 开发的验证库。内置多种验证器, 主要是参考 Laravel 框架的验证器。目前可用的验证类正在新增中。 相比大多数验证器来说，最大的优点是支持数据库验证。
 
 安装方法
 ---------------
@@ -13,7 +13,7 @@ JValidation 是为 spring boot 开发的验证库。内置多种验证器, 主�
 <dependency>
   <groupId>com.tianyisoft.jvalidate</groupId>
   <artifactId>jvalidation</artifactId>
-  <version>1.4.1</version>
+  <version>1.5.0</version>
 </dependency>
 ```
 
@@ -23,14 +23,14 @@ JValidation 是为 spring boot 开发的验证库。内置多种验证器, 主�
 ##### 第一种
 
  1. 在 SpringBootApplication 上面添加 `@EnableJValidate` 注解。
- 2. 在要使用验证的 controller 的方法上加上 `@Jvalidated` 注解
- 3. 在要使用验证的 controller 的方法的参数上加上 `@Jvalidated` 注解, 支持分组
+ 2. 在要使用验证的 controller 的方法上加上 `@Jvalidated` 注解 (1.5.0 版本后不再需要)
+ 3. 在要使用验证的 controller 的方法的参数上加上 `@Jvalidated` 注解, 支持分组和设置数据源
  4. 然后就可以在要验证的类里面写各种验证规则了
 
 如下代码:
 
 ```java
-@JValidated
+@JValidated // (1.5.0 版本后不再需要)
 @PostMapping("/users")
 public User store(@RequestBody @JValidated User user) {
     return user;
@@ -39,7 +39,6 @@ public User store(@RequestBody @JValidated User user) {
 
 上面代码验证错误时会返回 422 错误，如果想自己处理错误，可以使用一个 BindingErrors 类接收到错误信息:
 ```java
-@JValidated
 @PostMapping("/users")
 public User store(@RequestBody @JValidated(groups={xxx.class}) User user, BindingErrors bindingErrors) {
     if (bindingErrors.hasErrors()) {
@@ -143,6 +142,12 @@ public void validateFailedExceptionHandler() {}
 当参数含有 `BindingErrors` 类型时，会把错误信息放到里面，不再自动返回 422 错误。用法类似 `BindingResult`。不含有时还按之前的错误逻辑。
 
 
+
+说明
+-----------------
+
+JValidation 使用默认的 dataSource, 可能通过 `jvalidation.datasource-name` 来使用其他数据源
+
 根据条件决定是否要验证
 -----------------
 
@@ -226,6 +231,8 @@ class NameCondition implements Condition {
 
 例如: `@Exists(table = "users", field = "email", where = " and id != {{id}} ")`
 
+或者: `@Exists(sql = "select count(*) from users where email = ? and id = {{ request.path.user }}")`
+
 表示 users 表里面的 email 字段必须等于当前字段值，通过 where 语句排除了 id 等于当前对象的 id 值的.
 
 在where 条件里面可以使用 {{ request.path.id / request.get.id / request.header[s].id }} 这种方式来获取 request 中的信息，这在修改对象的时候特别有用。
@@ -266,7 +273,9 @@ class NameCondition implements Condition {
 ##### Unique
 不能在数据库重复，需要数据库支持。
 
- 例如: `@Unique(table = "users", field = "email", where = " and id != {{id}} ")` 
+例如: `@Unique(table = "users", field = "email", where = " and id != {{id}} ")` 
+
+或者: `@Unique(sql = "select count(*) from users where email = ? and id != {{ request.path.user }}")`
  
 表示 users 表里面的 email 字段不能重复，通过 where 语句排除了 id 等于当前对象的 id 值的.
 

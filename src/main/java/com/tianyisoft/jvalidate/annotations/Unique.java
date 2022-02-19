@@ -25,14 +25,14 @@ public @interface Unique {
      *
      * @return 数据库表名
      */
-    String table();
+    String table() default "";
 
     /**
      * 数据库字段名
      *
      * @return 数据库字段名
      */
-    String field();
+    String field() default "";
 
     /**
      * 附加 where 语句, 需要使用 and 或 or 开头
@@ -43,6 +43,26 @@ public @interface Unique {
      * @return 附加 where 语句
      */
     String where() default "";
+
+    /**
+     * 查询使用的 sql 语句，不为空时将忽略 table、field 和 where 的值
+     * sql 语句必须是 count 语句，当 count 结果大于 0 时为重复
+     * sql 语句最少有一个参数，表示当前字段的值，且当前字段的值必须是第一个，用 ？ 表示，举例:
+     *
+     * <example>
+     *     select count(*) from user where email = ?
+     * </example>
+     *
+     * 可以使用 {{ xx }} 来表示其他字段的值
+     * 或者 {{ request.path.xx}} {{ request.get.xx }} {{ request.header[s].xx }} 来使用 request 对象中的值，举例:
+     *
+     * <example>
+     *     select count(*) from user where email = ? and id != {{ request.path.user }}
+     * </example>
+     *
+     * @return 查询重复需要使用的 sql 语句
+     */
+    String sql() default "";
 
     /**
      * 判断是否需要进行验证的类，这个类要实现 Condition 接口，验证类会调用里面的 needValidate 方法来判断是否进行验证
