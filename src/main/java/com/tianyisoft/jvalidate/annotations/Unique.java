@@ -46,19 +46,18 @@ public @interface Unique {
 
     /**
      * 查询使用的 sql 语句，不为空时将忽略 table、field 和 where 的值
+     * <p>
      * sql 语句必须是 count 语句，当 count 结果大于 0 时为重复
+     * <p>
      * sql 语句最少有一个参数，表示当前字段的值，且当前字段的值必须是第一个，用 ？ 表示，举例:
-     *
-     * <example>
-     *     select count(*) from user where email = ?
-     * </example>
-     *
+     * <p>
+     * <code>select count(*) from user where email = ?</code>
+     * <p>
      * 可以使用 {{ xx }} 来表示其他字段的值
+     * <p>
      * 或者 {{ request.path.xx}} {{ request.get.xx }} {{ request.header[s].xx }} 来使用 request 对象中的值，举例:
-     *
-     * <example>
-     *     select count(*) from user where email = ? and id != {{ request.path.user }}
-     * </example>
+     * <p>
+     * <code>select count(*) from user where email = ? and id != {{ request.path.user }}</code>
      *
      * @return 查询重复需要使用的 sql 语句
      */
