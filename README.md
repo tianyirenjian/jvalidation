@@ -8,7 +8,7 @@ English | [中文版](./README.zh-CN.md)
 
 JValidation is a validation library developed for spring boot. There are a variety of built-in validators, mainly referring to the validators of the Laravel framework. Currently available validation classes are being added. Compared to most validators, the biggest advantage is that it supports database validation.
 
-installation method
+installation
 ---------------
 
 ````xml
@@ -19,10 +19,10 @@ installation method
 </dependency>
 ````
 
-Instructions for use
+How to use
 ----------------
 
-##### The first
+##### The first way
 
 1. Add the `@EnableJValidate` annotation to the SpringBootApplication.
 2. Add the `@Jvalidated` annotation to the method of the controller to be validated (no longer required after version 1.5.0)
@@ -50,7 +50,7 @@ public User store(@RequestBody @JValidated(groups={xxx.class}) User user, Bindin
 }
 ````
 
-##### Second
+##### Second way
 If you do not use annotations, static calls are also supported. Two methods are provided, which can return a map containing errors and handle them yourself:
 
 ````java
@@ -58,7 +58,7 @@ com.tianyisoft.jvalidate.JValidator.validate(JdbcTemplate jdbcTemplate, Object o
 com.tianyisoft.jvalidate.JValidator.validateWithoutJdbcTemplate(Object object, Class<?>[] groups) // without database
 ````
 
-start verification
+Start validate
 -------------
 
 Add validation rules to the User class to be validated, such as:
