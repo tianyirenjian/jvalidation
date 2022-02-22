@@ -2,7 +2,7 @@ JValidation
 =======
 
 [![License](https://img.shields.io/badge/license-apache2.0-green.svg)](https://github.com/tianyirenjian/jvalidation/blob/master/LICENSE)
-[![Maven Central](https://img.shields.io/maven-central/v/com.tianyisoft.jvalidate/jvalidation.svg?label=Maven%20Central)](https://search.maven.org /search?q=g:%22com.tianyisoft.jvalidate%22%20AND%20a:%22jvalidation%22)
+[![Maven Central](https://img.shields.io/maven-central/v/com.tianyisoft.jvalidate/jvalidation.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.tianyisoft.jvalidate%22%20AND%20a:%22jvalidation%22)
 
 English | [中文版](./README.zh-CN.md)
 
@@ -192,13 +192,13 @@ Must be after the date of date, date can be a date value or other field names, w
 ##### AfterOrEqual
 Must be a date greater than or equal to date. date is used the same as After
 
-#####Alpha
+##### Alpha
 must consist of letters
 
-#####AlphaDash
+##### AlphaDash
 Can only contain letters, numbers, dashes (-) and underscores (_)
 
-#####AlphaNum
+##### AlphaNum
 Can only consist of letters and numbers
 
 ##### Bail
