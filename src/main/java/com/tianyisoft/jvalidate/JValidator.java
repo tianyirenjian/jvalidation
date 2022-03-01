@@ -4,6 +4,7 @@ import com.tianyisoft.jvalidate.annotations.Bail;
 import com.tianyisoft.jvalidate.annotations.JValidate;
 import com.tianyisoft.jvalidate.annotations.NeedDatabase;
 import com.tianyisoft.jvalidate.utils.Tuple2;
+import com.tianyisoft.jvalidate.utils.ValidatorParams;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.lang.annotation.Annotation;
@@ -50,12 +51,14 @@ public class JValidator {
                     Object result = null;
                     if (annotation.annotationType().isAnnotationPresent(NeedDatabase.class)) {
                         if (jdbcTemplate != null) {
-                            Method method = clazz.getMethod("validate", annotation.annotationType(), Class[].class, JdbcTemplate.class, Class.class, Object.class, String.class);
-                            result = method.invoke(validatorInstance, annotation, groups, jdbcTemplate, klass, parameter, field.getName());
+                            ValidatorParams params = new ValidatorParams(groups, jdbcTemplate, klass, parameter, field.getName());
+                            Method method = clazz.getMethod("validate", annotation.annotationType(), ValidatorParams.class);
+                            result = method.invoke(validatorInstance, annotation, params);
                         }
                     } else {
-                        Method method = clazz.getMethod("validate", annotation.annotationType(), Class[].class, Class.class, Object.class, String.class);
-                        result = method.invoke(validatorInstance, annotation, groups, klass, parameter, field.getName());
+                        ValidatorParams params = new ValidatorParams(groups, null, klass, parameter, field.getName());
+                        Method method = clazz.getMethod("validate", annotation.annotationType(), ValidatorParams.class);
+                        result = method.invoke(validatorInstance, annotation, params);
                     }
                     Tuple2<Boolean, String> tuple2 = Tuple2.castFrom(result);
                     if (!tuple2.getV0()) {

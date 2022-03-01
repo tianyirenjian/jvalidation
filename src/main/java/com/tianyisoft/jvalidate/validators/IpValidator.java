@@ -2,19 +2,20 @@ package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.Ip;
 import com.tianyisoft.jvalidate.utils.Tuple2;
+import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class IpValidator extends RegexpValidator {
-    public Tuple2<Boolean, String> validate(Ip ip, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+    public Tuple2<Boolean, String> validate(Ip ip, ValidatorParams vParams)
             throws NoSuchFieldException, IllegalAccessException, InstantiationException {
 
-        if (notNeedValidate(groups, ip.groups(), ip.condition(), klass, object, ip.params())) {
+        if (notNeedValidate(vParams.getGroups(), ip.groups(), ip.condition(), vParams.getKlass(), vParams.getObject(), ip.params())) {
             return trueResult();
         }
-        Object o = getFieldValue(klass, object, fieldName);
+        Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
         if (o == null) {
             return trueResult();
         }
@@ -25,7 +26,7 @@ public class IpValidator extends RegexpValidator {
             });
             if (b) return trueResult();
         }
-        return falseResult(ip.message(), fieldName);
+        return falseResult(ip.message(), vParams.getFieldName());
     }
 
     protected String ipv4() {

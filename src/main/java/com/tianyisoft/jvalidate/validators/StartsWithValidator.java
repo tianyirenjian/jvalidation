@@ -2,18 +2,19 @@ package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.StartsWith;
 import com.tianyisoft.jvalidate.utils.Tuple2;
+import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StartsWithValidator extends Validator {
-    public Tuple2<Boolean, String> validate(StartsWith startsWith, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+    public Tuple2<Boolean, String> validate(StartsWith startsWith, ValidatorParams vParams)
             throws NoSuchFieldException, IllegalAccessException, InstantiationException {
 
-        if (notNeedValidate(groups, startsWith.groups(), startsWith.condition(), klass, object, startsWith.params())) {
+        if (notNeedValidate(vParams.getGroups(), startsWith.groups(), startsWith.condition(), vParams.getKlass(), vParams.getObject(), startsWith.params())) {
             return trueResult();
         }
-        Object o = getFieldValue(klass, object, fieldName);
+        Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
         if (!(o instanceof String)) {
             return trueResult();
         }
@@ -26,7 +27,7 @@ public class StartsWithValidator extends Validator {
         if (end.get()) {
             return trueResult();
         } else {
-            return falseResult(startsWith.message(), fieldName, String.join(", ", Arrays.toString(startsWith.starts())));
+            return falseResult(startsWith.message(), vParams.getFieldName(), String.join(", ", Arrays.toString(startsWith.starts())));
         }
     }
 }

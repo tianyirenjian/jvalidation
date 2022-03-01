@@ -2,18 +2,19 @@ package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.Email;
 import com.tianyisoft.jvalidate.utils.Tuple2;
+import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.util.regex.Pattern;
 
 public class EmailValidator extends RegexpValidator {
-    public Tuple2<Boolean, String> validate(Email email, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+    public Tuple2<Boolean, String> validate(Email email, ValidatorParams vParams)
             throws NoSuchFieldException, IllegalAccessException, InstantiationException {
 
-        if (notNeedValidate(groups, email.groups(), email.condition(), klass, object, email.params())) {
+        if (notNeedValidate(vParams.getGroups(), email.groups(), email.condition(), vParams.getKlass(), vParams.getObject(), email.params())) {
             return trueResult();
         }
-        Object o = getFieldValue(klass, object, fieldName);
-        return validateRegexp(o, regexp() , 0, email.message(), fieldName);
+        Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
+        return validateRegexp(o, regexp() , 0, email.message(), vParams.getFieldName());
     }
 
     @Override

@@ -2,18 +2,19 @@ package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.EndsWith;
 import com.tianyisoft.jvalidate.utils.Tuple2;
+import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EndsWithValidator extends Validator {
-    public Tuple2<Boolean, String> validate(EndsWith endsWith, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+    public Tuple2<Boolean, String> validate(EndsWith endsWith, ValidatorParams vParams)
             throws NoSuchFieldException, IllegalAccessException, InstantiationException {
 
-        if (notNeedValidate(groups, endsWith.groups(), endsWith.condition(), klass, object, endsWith.params())) {
+        if (notNeedValidate(vParams.getGroups(), endsWith.groups(), endsWith.condition(), vParams.getKlass(), vParams.getObject(), endsWith.params())) {
             return trueResult();
         }
-        Object o = getFieldValue(klass, object, fieldName);
+        Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
         if (!(o instanceof String)) {
             return trueResult();
         }
@@ -26,7 +27,7 @@ public class EndsWithValidator extends Validator {
         if (end.get()) {
             return trueResult();
         } else {
-            return falseResult(endsWith.message(), fieldName, String.join(", ", Arrays.toString(endsWith.ends())));
+            return falseResult(endsWith.message(), vParams.getFieldName(), String.join(", ", Arrays.toString(endsWith.ends())));
         }
     }
 }

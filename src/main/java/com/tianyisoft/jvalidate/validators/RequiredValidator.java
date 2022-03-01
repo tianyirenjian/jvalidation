@@ -2,17 +2,20 @@ package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.Required;
 import com.tianyisoft.jvalidate.utils.Tuple2;
+import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.util.Collection;
 import java.util.regex.Pattern;
 
 public class RequiredValidator extends Validator {
-    public Tuple2<Boolean, String> validate(Required required, Class<?>[] groups, Class<?> klass, Object object, String fieldName) throws NoSuchFieldException, IllegalAccessException, InstantiationException {
-        if (notNeedValidate(groups, required.groups(), required.condition(), klass, object, required.params())) {
+    public Tuple2<Boolean, String> validate(Required required, ValidatorParams vParams)
+            throws NoSuchFieldException, IllegalAccessException, InstantiationException {
+
+        if (notNeedValidate(vParams.getGroups(), required.groups(), required.condition(), vParams.getKlass(), vParams.getObject(), required.params())) {
             return trueResult();
         }
-        Object o = getFieldValue(klass, object, fieldName);
-        return validateRequired(o, required.allowEmpty(), required.allowBlank(), required.message(), fieldName);
+        Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
+        return validateRequired(o, required.allowEmpty(), required.allowBlank(), required.message(), vParams.getFieldName());
     }
 
     protected Tuple2<Boolean, String> validateRequired(Object o, Boolean allowEmpty, Boolean allowBlank, String message, String fieldName) {

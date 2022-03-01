@@ -2,18 +2,19 @@ package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.In;
 import com.tianyisoft.jvalidate.utils.Tuple2;
+import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.util.Arrays;
 import java.util.Objects;
 
 public class InValidator extends Validator{
-    public Tuple2<Boolean, String> validate(In in, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+    public Tuple2<Boolean, String> validate(In in, ValidatorParams vParams)
             throws NoSuchFieldException, IllegalAccessException, InstantiationException {
 
-        if (notNeedValidate(groups, in.groups(), in.condition(), klass, object, in.params())) {
+        if (notNeedValidate(vParams.getGroups(), in.groups(), in.condition(), vParams.getKlass(), vParams.getObject(), in.params())) {
             return trueResult();
         }
-        Object o = getFieldValue(klass, object, fieldName);
+        Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
         if (!(o instanceof String)) {
             return trueResult();
         }
@@ -22,6 +23,6 @@ public class InValidator extends Validator{
                 return trueResult();
             }
         }
-        return falseResult(in.message(), fieldName, Arrays.toString(in.values()));
+        return falseResult(in.message(), vParams.getFieldName(), Arrays.toString(in.values()));
     }
 }
