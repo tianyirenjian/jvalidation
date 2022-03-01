@@ -19,7 +19,7 @@ public @interface NotRegexp {
      *
      * @return 错误描述，自定义时可以有一个 %s 占位符，表示当前字段名
      */
-    String message() default "%s 正则匹配";
+    String message() default "notRegexp";
 
     /**
      * 正则表达式

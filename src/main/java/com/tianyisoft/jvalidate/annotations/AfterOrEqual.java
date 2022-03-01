@@ -19,7 +19,7 @@ public @interface AfterOrEqual {
      *
      * @return 错误描述，自定义时可以有两个 %s 占位符，表示当前字段名和要比较的时间
      */
-    String message() default "%s 必须是 %s 之后的日期或等于 %s";
+    String message() default "afterOrEqual";
 
     /**
      * @return 要比较的日期或其他字段名

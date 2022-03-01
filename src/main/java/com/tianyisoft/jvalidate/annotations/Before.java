@@ -19,7 +19,7 @@ public @interface Before {
      *
      * @return 错误描述，自定义时可以有两个 %s 占位符，表示当前字段名和要比较的时间
      */
-    String message() default "%s 必须在 %s 之前";
+    String message() default "before";
 
     /**
      * @return 要比较的日期或其他字段名

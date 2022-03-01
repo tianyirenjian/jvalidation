@@ -11,7 +11,7 @@ public class AlphaDashValidator extends RegexpValidator {
         if (notNeedValidate(vParams.getGroups(), alphaDash.groups(), alphaDash.condition(), vParams.getKlass(), vParams.getObject(), alphaDash.params())) {
             return trueResult();
         }
-        Object o = getFieldValue(vParams.getClass(), vParams.getObject(), vParams.getFieldName());
+        Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
         return validateRegexp(o, regexp() , 0, alphaDash.message(), vParams.getFieldName());
     }
 

@@ -18,7 +18,7 @@ public @interface Exists {
      *
      * @return 错误描述，自定义时可以有两个 %s 占位符，表示当前字段名和表名
      */
-    String message() default "%s 必须在表 %s 中已存在";
+    String message() default "exists";
 
     /**
      * 数据库表名
