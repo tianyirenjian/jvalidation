@@ -1,16 +1,16 @@
 package com.tianyisoft.jvalidate;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tianyisoft.jvalidate.annotations.Bail;
 import com.tianyisoft.jvalidate.annotations.JValidate;
 import com.tianyisoft.jvalidate.annotations.NeedDatabase;
+import com.tianyisoft.jvalidate.utils.Helper;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 import com.tianyisoft.jvalidate.utils.ValidatorParams;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,23 +19,23 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class JValidator {
-    public static Map<String, List<String>> validate(JdbcTemplate jdbcTemplate, Object object, Class<?>[] groups, String language, String defaultLang) {
+    public static Map<String, List<String>> validate(Object object, Class<?>[] groups, JdbcTemplate jdbcTemplate) {
+        return validate(object, groups, jdbcTemplate, "zh_CN", "zh_CN");
+    }
+
+    public static Map<String, List<String>> validate(Object object, Class<?>[] groups) {
+        return validate(object, groups, null, "zh_CN", "zh_CN");
+    }
+
+    public static Map<String, List<String>> validate(Object object, Class<?>[] groups,JdbcTemplate jdbcTemplate, String language, String defaultLang) {
         Map<String, Object> map = new HashMap<>();
         map.put("object", object);
         map.put("groups", groups);
         return doValidate(map, jdbcTemplate, language, defaultLang);
     }
 
-    public static Map<String, List<String>> validateWithoutJdbcTemplate(Object object, Class<?>[] groups, String language, String defaultLang) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("object", object);
-        map.put("groups", groups);
-        return doValidate(map, null, language, defaultLang);
-    }
-
     public static Map<String, List<String>> doValidate(Map<String, Object> parameters, JdbcTemplate jdbcTemplate, String language, String defaultLang) {
         Map<String, String> messages = messages(language, defaultLang);
-        System.out.println(messages);
         Map<String, List<String>> errors = new HashMap<>();
         Object parameter = parameters.get("object");
         Class<?>[] groups = (Class<?>[]) parameters.get("groups");
@@ -56,17 +56,15 @@ public class JValidator {
                     Class<?> clazz = Class.forName(annotation.annotationType().getName().replaceFirst(".annotations.", ".validators.") + "Validator");
                     Object validatorInstance = clazz.newInstance();
                     Object result = null;
+                    ValidatorParams params;
                     if (annotation.annotationType().isAnnotationPresent(NeedDatabase.class)) {
-                        if (jdbcTemplate != null) {
-                            ValidatorParams params = new ValidatorParams(groups, jdbcTemplate, klass, parameter, field.getName());
-                            Method method = clazz.getMethod("validate", annotation.annotationType(), ValidatorParams.class);
-                            result = method.invoke(validatorInstance, annotation, params);
-                        }
+                        params = new ValidatorParams(groups, jdbcTemplate, klass, parameter, field.getName());
                     } else {
-                        ValidatorParams params = new ValidatorParams(groups, null, klass, parameter, field.getName());
-                        Method method = clazz.getMethod("validate", annotation.annotationType(), ValidatorParams.class);
-                        result = method.invoke(validatorInstance, annotation, params);
+                        params = new ValidatorParams(groups, null, klass, parameter, field.getName());
                     }
+                    Method method = clazz.getMethod("validate", annotation.annotationType(), ValidatorParams.class);
+                    result = method.invoke(validatorInstance, annotation, params);
+
                     Tuple2<Boolean, String> tuple2 = Tuple2.castFrom(result);
                     if (!tuple2.getV0()) {
                         errorList.add(tuple2.getV1());
@@ -85,18 +83,18 @@ public class JValidator {
         return errors;
     }
 
-    @SuppressWarnings("unchecked")
     private static Map<String, String> messages(String lang, String defaultLang) {
+        if (Objects.equals(lang, "zh")) {
+            lang = "zh_CN";
+        }
         Map<String, String> messages = new HashMap<>();
         try {
-            InputStream inputStream = JValidator.class.getResourceAsStream("/jvalidation." + lang + ".json");
-            String values = (StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8));
-            messages = (Map<String, String>) ((new ObjectMapper()).readValue(values, Map.class));
+            String values = Helper.readResourceFile("/jvalidation." + lang + ".json", StandardCharsets.UTF_8);
+            messages = (new ObjectMapper()).readValue(values, new TypeReference<Map<String, String>>() {});
         } catch(IOException ex) {
             try {
-                InputStream inputStream = JValidator.class.getResourceAsStream("/jvalidation." + defaultLang + ".json");
-                String values = (StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8));
-                messages = (Map<String, String>) ((new ObjectMapper()).readValue(values, Map.class));
+                String values = Helper.readResourceFile("/jvalidation." + defaultLang + ".json", StandardCharsets.UTF_8);
+                messages = (new ObjectMapper()).readValue(values, new TypeReference<Map<String, String>>() {});
             } catch (IOException exception) {
                 return messages;
             }

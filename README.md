@@ -54,8 +54,9 @@ public User store(@RequestBody @JValidated(groups={xxx.class}) User user, Bindin
 If you do not use annotations, static calls are also supported. Two methods are provided, which can return a map containing errors and handle them yourself:
 
 ````java
-com.tianyisoft.jvalidate.JValidator.validate(JdbcTemplate jdbcTemplate, Object object, Class<?>[] groups) // use database
-com.tianyisoft.jvalidate.JValidator.validateWithoutJdbcTemplate(Object object, Class<?>[] groups) // without database
+com.tianyisoft.jvalidate.JValidator.validate(Object object, Class<?>[] groups)
+com.tianyisoft.jvalidate.JValidator.validate(Object object, Class<?>[] groups, JdbcTemplate jdbcTemplate) // use database
+com.tianyisoft.jvalidate.JValidator.validate(Object object, Class<?>[] groups, JdbcTemplate jdbcTemplate, String language, String defaultLang) // use i18n
 ````
 
 Start validate

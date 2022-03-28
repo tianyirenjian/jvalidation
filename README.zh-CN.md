@@ -54,8 +54,9 @@ public User store(@RequestBody @JValidated(groups={xxx.class}) User user, Bindin
 如果不使用注解的方式，也支持静态调用，提供了两个方法, 可以返回包含错误的 map，自行处理:
 
 ```java
-com.tianyisoft.jvalidate.JValidator.validate(JdbcTemplate jdbcTemplate, Object object, Class<?>[] groups) // 使用数据库
-com.tianyisoft.jvalidate.JValidator.validateWithoutJdbcTemplate(Object object, Class<?>[] groups) // 不使用数据库
+com.tianyisoft.jvalidate.JValidator.validate(Object object, Class<?>[] groups)
+com.tianyisoft.jvalidate.JValidator.validate(Object object, Class<?>[] groups, JdbcTemplate jdbcTemplate) // 使用数据库
+com.tianyisoft.jvalidate.JValidator.validate(Object object, Class<?>[] groups, JdbcTemplate jdbcTemplate, String language, String defaultLang) // i18n
 ```
 
 开始验证
