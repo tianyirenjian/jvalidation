@@ -11,6 +11,6 @@ public class DateEqualsValidator extends BaseDateValidator {
         if (notNeedValidate(vParams.getGroups(), dateEquals.groups(), dateEquals.condition(), vParams.getKlass(), vParams.getObject(), dateEquals.params())) {
             return trueResult();
         }
-        return validateDate(vParams.getKlass(), vParams.getObject(), vParams.getFieldName(), dateEquals.withTime(), dateEquals.date(), dateEquals.message(), "e");
+        return validateDate(vParams, dateEquals.withTime(), dateEquals.date(), dateEquals.message(), "e");
     }
 }

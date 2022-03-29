@@ -1,12 +1,15 @@
 package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.Unique;
+import com.tianyisoft.jvalidate.utils.Pair;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.tianyisoft.jvalidate.utils.Helper.mapOf;
 
 public class UniqueValidator extends Validator {
     public Tuple2<Boolean, String> validate(Unique unique, ValidatorParams vParams)
@@ -37,6 +40,11 @@ public class UniqueValidator extends Validator {
         if (count != null && count == 0L) {
             return trueResult();
         }
-        return falseResult(unique.message(), vParams.getFieldName(), unique.table());
+        return falseResult(vParams.getMessages(), unique.message(), mapOf(
+                Pair.of("attribute", vParams.getFieldName()),
+                Pair.of("input", o),
+                Pair.of("table", unique.table()),
+                Pair.of("field", unique.field())
+        ));
     }
 }

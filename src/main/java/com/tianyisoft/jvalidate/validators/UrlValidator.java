@@ -1,12 +1,15 @@
 package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.Url;
+import com.tianyisoft.jvalidate.utils.Pair;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+
+import static com.tianyisoft.jvalidate.utils.Helper.mapOf;
 
 public class UrlValidator extends Validator {
     public Tuple2<Boolean, String> validate(Url url, ValidatorParams vParams)
@@ -25,10 +28,12 @@ public class UrlValidator extends Validator {
                 URL ur = new URL(urlString);
                 ur.toURI();
                 return trueResult();
-            } catch (MalformedURLException | URISyntaxException e) {
-                return falseResult(url.message(), vParams.getFieldName());
+            } catch (MalformedURLException | URISyntaxException ignored) {
             }
         }
-        return falseResult(url.message(), vParams.getFieldName());
+        return falseResult(vParams.getMessages(), url.message(), mapOf(
+                Pair.of("attribute", vParams.getFieldName()),
+                Pair.of("input", o)
+        ));
     }
 }

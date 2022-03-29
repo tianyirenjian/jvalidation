@@ -1,12 +1,15 @@
 package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.Exists;
+import com.tianyisoft.jvalidate.utils.Pair;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.tianyisoft.jvalidate.utils.Helper.mapOf;
 
 public class ExistsValidator extends Validator {
     public Tuple2<Boolean, String> validate(Exists exists, ValidatorParams vParams)
@@ -37,6 +40,11 @@ public class ExistsValidator extends Validator {
         if (count != null && count > 0) {
             return trueResult();
         }
-        return falseResult(exists.message(), vParams.getFieldName(), exists.table());
+        return falseResult(vParams.getMessages(), exists.message(), mapOf(
+                Pair.of("attribute", vParams.getFieldName()),
+                Pair.of("input", o),
+                Pair.of("table", exists.table()),
+                Pair.of("field", exists.field())
+        ));
     }
 }

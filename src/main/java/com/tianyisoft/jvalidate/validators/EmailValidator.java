@@ -14,7 +14,7 @@ public class EmailValidator extends RegexpValidator {
             return trueResult();
         }
         Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
-        return validateRegexp(o, regexp() , 0, email.message(), vParams.getFieldName());
+        return validateRegexp(o, regexp() , 0, email.message(), vParams);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.Distinct;
+import com.tianyisoft.jvalidate.utils.Pair;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
@@ -8,6 +9,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.tianyisoft.jvalidate.utils.Helper.mapOf;
 
 public class DistinctValidator extends Validator {
     public Tuple2<Boolean, String> validate(Distinct distinct, ValidatorParams vParams)
@@ -33,6 +36,9 @@ public class DistinctValidator extends Validator {
                 return trueResult();
             }
         }
-        return falseResult(distinct.message(), vParams.getFieldName());
+        return falseResult(vParams.getMessages(), distinct.message(), mapOf(
+                Pair.of("attribute", vParams.getFieldName()),
+                Pair.of("input", o)
+        ));
     }
 }

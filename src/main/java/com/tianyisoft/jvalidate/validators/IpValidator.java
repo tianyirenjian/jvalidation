@@ -1,12 +1,15 @@
 package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.Ip;
+import com.tianyisoft.jvalidate.utils.Pair;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+
+import static com.tianyisoft.jvalidate.utils.Helper.mapOf;
 
 public class IpValidator extends RegexpValidator {
     public Tuple2<Boolean, String> validate(Ip ip, ValidatorParams vParams)
@@ -26,7 +29,10 @@ public class IpValidator extends RegexpValidator {
             });
             if (b) return trueResult();
         }
-        return falseResult(ip.message(), vParams.getFieldName());
+        return falseResult(vParams.getMessages(), ip.message(), mapOf(
+                Pair.of("attribute", vParams.getFieldName()),
+                Pair.of("input", o)
+        ));
     }
 
     protected String ipv4() {

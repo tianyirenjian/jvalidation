@@ -1,10 +1,13 @@
 package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.Different;
+import com.tianyisoft.jvalidate.utils.Pair;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.util.Objects;
+
+import static com.tianyisoft.jvalidate.utils.Helper.mapOf;
 
 public class DifferentValidator extends Validator {
     public Tuple2<Boolean, String> validate(Different different, ValidatorParams vParams)
@@ -15,10 +18,18 @@ public class DifferentValidator extends Validator {
         }
         Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
         Object o2 = getFieldValue(vParams.getKlass(), vParams.getObject(), different.field());
+        boolean same;
         if (different.strict()) {
-            return o == o2 ? falseResult(different.message(), vParams.getFieldName(), different.field()) : trueResult();
+            same = o == o2;
         } else {
-            return Objects.equals(o, o2) ?falseResult(different.message(), vParams.getFieldName(), different.field()) : trueResult();
+            same = Objects.equals(o, o2);
         }
+        return !same ?
+                trueResult() :
+                falseResult(vParams.getMessages(), different.message(), mapOf(
+                        Pair.of("attribute", vParams.getFieldName()),
+                        Pair.of("input", o),
+                        Pair.of("field", different.field())
+                ));
     }
 }

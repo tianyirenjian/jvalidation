@@ -12,7 +12,7 @@ public class Ipv6Validator extends IpValidator {
             return trueResult();
         }
         Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
-        return validateRegexp(o, regexp(), 0, ipv6.message(), vParams.getFieldName());
+        return validateRegexp(o, regexp(), 0, ipv6.message(), vParams);
     }
 
     @Override

@@ -11,6 +11,6 @@ public class AfterOrEqualValidator extends BaseDateValidator {
         if (notNeedValidate(vParams.getGroups(), afterOrEqual.groups(), afterOrEqual.condition(), vParams.getKlass(), vParams.getObject(), afterOrEqual.params())) {
             return trueResult();
         }
-        return validateDate(vParams.getKlass(), vParams.getObject(), vParams.getFieldName(), afterOrEqual.withTime(), afterOrEqual.date(), afterOrEqual.message(), "gte");
+        return validateDate(vParams, afterOrEqual.withTime(), afterOrEqual.date(), afterOrEqual.message(), "gte");
     }
 }

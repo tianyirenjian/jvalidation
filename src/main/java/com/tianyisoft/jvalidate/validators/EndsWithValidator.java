@@ -1,11 +1,14 @@
 package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.EndsWith;
+import com.tianyisoft.jvalidate.utils.Pair;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.tianyisoft.jvalidate.utils.Helper.mapOf;
 
 public class EndsWithValidator extends Validator {
     public Tuple2<Boolean, String> validate(EndsWith endsWith, ValidatorParams vParams)
@@ -27,7 +30,11 @@ public class EndsWithValidator extends Validator {
         if (end.get()) {
             return trueResult();
         } else {
-            return falseResult(endsWith.message(), vParams.getFieldName(), String.join(", ", Arrays.toString(endsWith.ends())));
+            return falseResult(vParams.getMessages(), endsWith.message(), mapOf(
+                    Pair.of("attribute", vParams.getFieldName()),
+                    Pair.of("input", o),
+                    Pair.of("ends", Arrays.toString(endsWith.ends()))
+            ));
         }
     }
 }

@@ -11,6 +11,6 @@ public class BeforeValidator extends BaseDateValidator {
         if (notNeedValidate(vParams.getGroups(), before.groups(), before.condition(), vParams.getKlass(), vParams.getObject(), before.params())) {
             return trueResult();
         }
-        return validateDate(vParams.getKlass(), vParams.getObject(), vParams.getFieldName(), before.withTime(), before.date(), before.message(), "lt");
+        return validateDate(vParams, before.withTime(), before.date(), before.message(), "lt");
     }
 }

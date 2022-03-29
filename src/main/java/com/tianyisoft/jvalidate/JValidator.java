@@ -58,9 +58,9 @@ public class JValidator {
                     Object result = null;
                     ValidatorParams params;
                     if (annotation.annotationType().isAnnotationPresent(NeedDatabase.class)) {
-                        params = new ValidatorParams(groups, jdbcTemplate, klass, parameter, field.getName());
+                        params = new ValidatorParams(groups, jdbcTemplate, klass, parameter, field.getName(), messages);
                     } else {
-                        params = new ValidatorParams(groups, null, klass, parameter, field.getName());
+                        params = new ValidatorParams(groups, null, klass, parameter, field.getName(), messages);
                     }
                     Method method = clazz.getMethod("validate", annotation.annotationType(), ValidatorParams.class);
                     result = method.invoke(validatorInstance, annotation, params);
@@ -85,8 +85,9 @@ public class JValidator {
 
     private static Map<String, String> messages(String lang, String defaultLang) {
         if (Objects.equals(lang, "zh")) {
-            lang = "zh_CN";
+            lang = "zh-CN";
         }
+        lang = lang.replace("_", "-");
         Map<String, String> messages = new HashMap<>();
         try {
             String values = Helper.readResourceFile("/jvalidation." + lang + ".json", StandardCharsets.UTF_8);

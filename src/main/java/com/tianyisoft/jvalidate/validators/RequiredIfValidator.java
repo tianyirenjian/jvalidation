@@ -13,6 +13,6 @@ public class RequiredIfValidator extends RequiredValidator {
         }
 
         Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
-        return validateRequired(o, requiredIf.allowEmpty(), requiredIf.allowBlank(), requiredIf.message(), vParams.getFieldName());
+        return validateRequired(o, requiredIf.allowEmpty(), requiredIf.allowBlank(), requiredIf.message(), vParams);
     }
 }

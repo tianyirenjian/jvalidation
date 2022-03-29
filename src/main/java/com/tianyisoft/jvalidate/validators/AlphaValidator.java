@@ -12,7 +12,7 @@ public class AlphaValidator extends RegexpValidator {
             return trueResult();
         }
         Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
-        return validateRegexp(o, regexp() , 0, alpha.message(), vParams.getFieldName());
+        return validateRegexp(o, regexp() , 0, alpha.message(), vParams);
     }
 
     @Override
