@@ -163,7 +163,7 @@ Condition 接口的 needValidate 方法接受 Object[] 的参数，参数可以�
 示例:
 
 ```java
-import com.tianyisoft.jvalidate.annotations.RequiredIf;
+import com.tianyisoft.jvalidate.annotations.Required;
 
 public class User {
     @Required(condition = NameCondition.class, params = {"foo", "{{ this }}", "{{ bar }}"})

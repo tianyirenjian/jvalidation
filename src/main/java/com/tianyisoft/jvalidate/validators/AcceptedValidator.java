@@ -1,14 +1,14 @@
 package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.Accepted;
-import com.tianyisoft.jvalidate.utils.Helper;
 import com.tianyisoft.jvalidate.utils.Pair;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+
+import static com.tianyisoft.jvalidate.utils.Helper.mapOf;
 
 public class AcceptedValidator extends Validator {
     public Tuple2<Boolean, String> validate(Accepted accepted, ValidatorParams vParams)
@@ -22,11 +22,9 @@ public class AcceptedValidator extends Validator {
         if (o == null || (o instanceof String && (acceptedValues.contains(o)))) {
             return trueResult();
         }
-        return falseResult(vParams.getMessages(), accepted.message(),
-                Helper.mapOf(
-                        Pair.of("attribute", vParams.getFieldName()),
-                        Pair.of("input", o)
-                )
-        );
+        return falseResult(vParams.getMessages(), accepted.message(), mapOf(
+                Pair.of("attribute", vParams.getFieldName()),
+                Pair.of("input", o)
+        ));
     }
 }

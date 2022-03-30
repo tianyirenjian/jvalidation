@@ -1,6 +1,5 @@
 package com.tianyisoft.jvalidate.validators;
 
-import com.tianyisoft.jvalidate.utils.Helper;
 import com.tianyisoft.jvalidate.utils.Pair;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 import com.tianyisoft.jvalidate.utils.ValidatorParams;
@@ -10,12 +9,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.Date;
-import java.util.Map;
 import java.util.Objects;
 import java.util.TimeZone;
+
+import static com.tianyisoft.jvalidate.utils.Helper.mapOf;
 
 public class BaseDateValidator extends Validator {
     protected Tuple2<Boolean, String> validateDate(
@@ -101,12 +99,11 @@ public class BaseDateValidator extends Validator {
             }
         }
 
-        return falseResult(vParams.getMessages(), message, Helper.mapOf(
-                        Pair.of("attribute", fieldName),
-                        Pair.of("input", o),
-                        Pair.of("date", date)
-                )
-        );
+        return falseResult(vParams.getMessages(), message, mapOf(
+                Pair.of("attribute", fieldName),
+                Pair.of("input", o),
+                Pair.of("date", date)
+        ));
     }
 
     private Boolean operatorDate(Date d1, Date d2, String operator) {

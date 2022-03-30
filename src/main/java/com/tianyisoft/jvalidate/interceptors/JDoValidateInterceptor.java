@@ -72,7 +72,7 @@ public class JDoValidateInterceptor implements HandlerInterceptor, ApplicationCo
             for (Parameter param : parameters) {
                 if (param.getType().getName().equals(BindingErrors.class.getName())) {
                     hasBindingErrors = true;
-                    request.setAttribute("jvalidation_binding_errors", new BindingErrors(errors));
+                    request.setAttribute("__jvalidation_binding_errors", new BindingErrors(errors));
                     break;
                 }
             }

@@ -4,8 +4,6 @@ import com.tianyisoft.jvalidate.annotations.Email;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
-import java.util.regex.Pattern;
-
 public class EmailValidator extends RegexpValidator {
     public Tuple2<Boolean, String> validate(Email email, ValidatorParams vParams)
             throws NoSuchFieldException, IllegalAccessException, InstantiationException {

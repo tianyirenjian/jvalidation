@@ -163,7 +163,7 @@ Or use {{ request.path.id / request.get.id / request.header[s].id }} to get the 
 Example:
 
 ````java
-import com.tianyisoft.jvalidate.annotations.RequiredIf;
+import com.tianyisoft.jvalidate.annotations.Required;
 
 public class User {
     @Required(condition = NameCondition.class, params = {"foo", "{{ this }}", "{{ bar }}"})

@@ -3,7 +3,6 @@ package com.tianyisoft.jvalidate.validators;
 import com.tianyisoft.jvalidate.annotations.ExistsGroup;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 import com.tianyisoft.jvalidate.utils.ValidatorParams;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;

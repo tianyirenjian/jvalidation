@@ -5,8 +5,6 @@ import com.tianyisoft.jvalidate.utils.Pair;
 import com.tianyisoft.jvalidate.utils.Tuple2;
 import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
-import java.util.Arrays;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import static com.tianyisoft.jvalidate.utils.Helper.mapOf;
