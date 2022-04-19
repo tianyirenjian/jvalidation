@@ -15,7 +15,7 @@ installation
 <dependency>
   <groupId>com.tianyisoft.jvalidate</groupId>
   <artifactId>jvalidation</artifactId>
-  <version>1.5.0</version>
+  <version>1.6.0</version>
 </dependency>
 ````
 
@@ -180,6 +180,17 @@ class NameCondition implements Condition {
     }
 }
 ````
+
+i18n support
+------------
+
+The i18n function has been supported since version 1.6. For the language file format, please refer to the files in the resources folder.
+
+You can create a language file with the same name in the resources directory of the spring boot project to override the default language file.
+
+You can also create new language files in the resources directory to supplement the system language files.
+
+Use `jvalidation.default-lang` to configure the default language, otherwise it defaults to English.
 
 Available Validation Rules
 -----------------

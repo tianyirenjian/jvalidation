@@ -181,6 +181,17 @@ class NameCondition implements Condition {
 }
 ```
 
+i18n 支持
+----------
+
+自 1.6 版本开始支持 i18n 功能, 语言文件格式可参考 resources 文件夹下的文件。
+
+可以在 spring boot 项目的 resources 目录下创建同名的语言文件来覆盖默认的语言文件。
+
+也可以在 resources 目录下创建新的语言文件来补充系统语言文件的不足。
+
+使用 `jvalidation.default-lang` 来配置默认语言，不配置默认为英文。
+
 支持的验证方式
 -----------------
 
