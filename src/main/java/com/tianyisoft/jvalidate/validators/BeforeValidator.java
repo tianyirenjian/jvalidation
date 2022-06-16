@@ -2,14 +2,15 @@ package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.Before;
 import com.tianyisoft.jvalidate.utils.Tuple2;
+import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 public class BeforeValidator extends BaseDateValidator {
-    public Tuple2<Boolean, String> validate(Before before, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+    public Tuple2<Boolean, String> validate(Before before, ValidatorParams vParams)
             throws NoSuchFieldException, IllegalAccessException, InstantiationException {
 
-        if (notNeedValidate(groups, before.groups(), before.condition(), klass, object, before.params())) {
+        if (notNeedValidate(vParams.getGroups(), before.groups(), before.condition(), vParams.getKlass(), vParams.getObject(), before.params())) {
             return trueResult();
         }
-        return validateDate(klass, object, fieldName, before.withTime(), before.date(), before.message(), "lt");
+        return validateDate(vParams, before.withTime(), before.date(), before.message(), "lt");
     }
 }

@@ -1,23 +1,35 @@
 package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.Different;
+import com.tianyisoft.jvalidate.utils.Pair;
 import com.tianyisoft.jvalidate.utils.Tuple2;
+import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.util.Objects;
 
+import static com.tianyisoft.jvalidate.utils.Helper.mapOf;
+
 public class DifferentValidator extends Validator {
-    public Tuple2<Boolean, String> validate(Different different, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+    public Tuple2<Boolean, String> validate(Different different, ValidatorParams vParams)
             throws NoSuchFieldException, IllegalAccessException, InstantiationException {
 
-        if (notNeedValidate(groups, different.groups(), different.condition(), klass, object, different.params())) {
+        if (notNeedValidate(vParams.getGroups(), different.groups(), different.condition(), vParams.getKlass(), vParams.getObject(), different.params())) {
             return trueResult();
         }
-        Object o = getFieldValue(klass, object, fieldName);
-        Object o2 = getFieldValue(klass, object, different.field());
+        Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
+        Object o2 = getFieldValue(vParams.getKlass(), vParams.getObject(), different.field());
+        boolean same;
         if (different.strict()) {
-            return o == o2 ? falseResult(different.message(), fieldName, different.field()) : trueResult();
+            same = o == o2;
         } else {
-            return Objects.equals(o, o2) ?falseResult(different.message(), fieldName, different.field()) : trueResult();
+            same = Objects.equals(o, o2);
         }
+        return !same ?
+                trueResult() :
+                falseResult(vParams.getMessages(), different.message(), mapOf(
+                        Pair.of("attribute", vParams.getFieldName()),
+                        Pair.of("input", o),
+                        Pair.of("field", different.field())
+                ));
     }
 }

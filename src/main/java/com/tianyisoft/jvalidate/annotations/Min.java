@@ -23,7 +23,7 @@ public @interface Min {
      *
      * @return 错误描述，自定义时可以有两个 %s 占位符，表示当前字段名和最小值
      */
-    String message() default "%s 不能小于 %s";
+    String message() default "min";
 
     /**
      * 最小值

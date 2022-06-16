@@ -19,7 +19,7 @@ public @interface After {
      *
      * @return 错误描述，自定义时可以有两个 %s 占位符，表示当前字段名和要比较的时间
      */
-    String message() default "%s 必须是 %s 之后的日期";
+    String message() default "after";
 
     /**
      * 要比较的日期，或者是另外一个字段的名称，当是另一个字段时，两个字段类型要一致

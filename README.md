@@ -4,41 +4,43 @@ JValidation
 [![License](https://img.shields.io/badge/license-apache2.0-green.svg)](https://github.com/tianyirenjian/jvalidation/blob/master/LICENSE)
 [![Maven Central](https://img.shields.io/maven-central/v/com.tianyisoft.jvalidate/jvalidation.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.tianyisoft.jvalidate%22%20AND%20a:%22jvalidation%22)
 
-JValidation 是为 spring boot 开发的验证库。内置多种验证器, 主要是参考 Laravel 框架的验证器。目前可用的验证类正在新增中。 相比大多数验证器来说，最大的优点是支持数据库验证。
+English | [中文版](./README.zh-CN.md)
 
-安装方法
+JValidation is a validation library developed for spring boot. There are a variety of built-in validators, mainly referring to the validators of the Laravel framework. Currently available validation classes are being added. Compared to most validators, the biggest advantage is that it supports database validation.
+
+installation
 ---------------
 
-```xml
+````xml
 <dependency>
   <groupId>com.tianyisoft.jvalidate</groupId>
   <artifactId>jvalidation</artifactId>
-  <version>1.5.0</version>
+  <version>1.6.0</version>
 </dependency>
-```
+````
 
-使用说明
+How to use
 ----------------
 
-##### 第一种
+##### The first way
 
- 1. 在 SpringBootApplication 上面添加 `@EnableJValidate` 注解。
- 2. 在要使用验证的 controller 的方法上加上 `@Jvalidated` 注解 (1.5.0 版本后不再需要)
- 3. 在要使用验证的 controller 的方法的参数上加上 `@Jvalidated` 注解, 支持分组和设置数据源
- 4. 然后就可以在要验证的类里面写各种验证规则了
+1. Add the `@EnableJValidate` annotation to the SpringBootApplication.
+2. Add the `@Jvalidated` annotation to the method of the controller to be validated (no longer required after version 1.5.0)
+3. Add the `@Jvalidated` annotation to the parameters of the method of the controller to be validated to support grouping and setting data sources
+4. Then you can write various validation rules in the class to be validated
 
-如下代码:
+The following code:
 
-```java
-@JValidated // (1.5.0 版本后不再需要)
+````java
+@JValidated // (no longer required after version 1.5.0)
 @PostMapping("/users")
 public User store(@RequestBody @JValidated User user) {
     return user;
 }
-```
+````
 
-上面代码验证错误时会返回 422 错误，如果想自己处理错误，可以使用一个 BindingErrors 类接收到错误信息:
-```java
+The above code will return a 422 error when validating an error. If you want to handle the error yourself, you can use a BindingErrors class to receive the error message:
+````java
 @PostMapping("/users")
 public User store(@RequestBody @JValidated(groups={xxx.class}) User user, BindingErrors bindingErrors) {
     if (bindingErrors.hasErrors()) {
@@ -46,22 +48,23 @@ public User store(@RequestBody @JValidated(groups={xxx.class}) User user, Bindin
     }
     return user;
 }
-```
+````
 
-##### 第二种
-如果不使用注解的方式，也支持静态调用，提供了两个方法, 可以返回包含错误的 map，自行处理:
+##### Second way
+If you do not use annotations, static calls are also supported. Two methods are provided, which can return a map containing errors and handle them yourself:
 
-```java
-com.tianyisoft.jvalidate.JValidator.validate(JdbcTemplate jdbcTemplate, Object object, Class<?>[] groups) // 使用数据库
-com.tianyisoft.jvalidate.JValidator.validateWithoutJdbcTemplate(Object object, Class<?>[] groups) // 不使用数据库
-```
+````java
+com.tianyisoft.jvalidate.JValidator.validate(Object object, Class<?>[] groups)
+com.tianyisoft.jvalidate.JValidator.validate(Object object, Class<?>[] groups, JdbcTemplate jdbcTemplate) // use database
+com.tianyisoft.jvalidate.JValidator.validate(Object object, Class<?>[] groups, JdbcTemplate jdbcTemplate, String language, String defaultLang) // use i18n
+````
 
-开始验证
+Start validate
 -------------
 
-在要验证的 User 类添加验证规则，如:
+Add validation rules to the User class to be validated, such as:
 
-```java
+````java
 
 import com.tianyisoft.jvalidate.annotations.*;
 import java.time.Instant;
@@ -70,97 +73,97 @@ import java.util.Date;
 import java.util.List;
 
 public class User {
-    @Bail // name 验证第一次失败时不再继续验证 name。不影响其他字段
-    @Required(message = "%s 不要为空") // 验证不为null， 字符串不等于空字符串，数组或 Collection 对象长度大于 0
-    @Alpha // 只允许字母
-    @Between(min = 6, max = 10) // 长度在 6 - 10 之间
+    @Bail // Do not continue to validate name when name validation fails for the first time. Does not affect other fields
+    @Required(message = "%s should not be empty") // Verify that it is not null, the string is not equal to the empty string, the length of the array or Collection object is greater than 0
+    @Alpha // only letters are allowed
+    @Between(min = 6, max = 10) // length is between 6 - 10
     private String name;
     @Required
-    @Url // 是一个合法的 url 地址
+    @Url // is a valid url address
     private String homepage;
     @Required
-    @Email // 是合法的 email 地址
-    @Unique(table = "users", field = "email", groups = {Create.class}) // 验证在数据库不重复, 在创建时
-    @Unique(table = "users", field = "email", groups = {Update.class}, where = " and id != {{ request.path.id }} ") // 验证在数据库不重复，除去 id 等于 request 的 path 参数 id, 在修改时用
-    @EndsWith(ends = {"com", "cc"}) // 以 com 或 cc 结尾
+    @Email // is a valid email address
+    @Unique(table = "users", field = "email", groups = {Create.class}) // Verify that the database is not duplicated, at creation time
+    @Unique(table = "users", field = "email", groups = {Update.class}, where = " and id != {{ request.path.id }} ") // Verify that the database is not duplicated, remove id is equal to the id of the path parameter of the request, which is used when modifying
+    @EndsWith(ends = {"com", "cc"}) // ends with com or cc
     private String email;
-    @AfterOrEqual(date = "1980-01-01") // 日期大于等于指定日期
-    @BeforeOrEqual(date = "2013-12-31") // 日期小于等于指定日期
+    @AfterOrEqual(date = "1980-01-01") // The date is greater than or equal to the specified date
+    @BeforeOrEqual(date = "2013-12-31") // The date is less than or equal to the specified date
     private Date birthday;
-    @After(date = "1980-01-01T00:00:00.000Z")  // 日期大于等于指定日期, 字段类型为 Instant
-    @AfterOrEqual(date = "1980-01-01T00:00:00.000Z") // 日期小于等于指定日期, 字段类型为 Instant
+    @After(date = "1980-01-01T00:00:00.000Z") // The date is greater than or equal to the specified date, the field type is Instant
+    @AfterOrEqual(date = "1980-01-01T00:00:00.000Z") // The date is less than or equal to the specified date, the field type is Instant
     private Instant birthday2;
 
-    @Between(min = 8, max = 70) // 年龄在 8 - 70 之间
+    @Between(min = 8, max = 70) // age is between 8 - 70
     private Integer age;
-    @Min(0) // 最小值
-    @Max(100) // 最大值
+    @Min(0) // minimum value
+    @Max(100) // maximum value
     private Long score;
-    @Distinct // 不允许有重复值
-    @Between(min= 1, max= 2) // 长度限制
+    @Distinct // no duplicate values allowed
+    @Between(min= 1, max= 2) // length limit
     private List<String> hobbies;
 
  // getters and setters
 }
 class Update{}
-```
+````
 
-当验证失败会返回 422 错误，在消息体返回错误详情:
+When validation fails, a 422 error will be returned, and the error details will be returned in the message body:
 
-```json
+````json
 {
     "message": "The given data was invalid.",
     "errors": {
         "birthday": [
-            "birthday 必须是大于或等于 1980-01-01 的日期"
+            "birthday must be a date greater than or equal to 1980-01-01"
         ],
         "score": [
-            "score 不能大于 100"
+            "score cannot be greater than 100"
         ],
         "hobbies": [
-            "hobbies 必须在 1 和 2 之间"
+            "hobbies must be between 1 and 2"
         ],
         "name": [
-            "name 只能由字母组成"
+            "name can only consist of letters"
         ],
         "email": [
-            "email 在 users 中已存在"
+            "email already exists in users"
         ],
         "age": [
-            "age 必须在 8 和 70 之间"
+            "age must be between 8 and 70"
         ]
     }
 }
-```
+````
 
-返回状态码和错误结构也可以自定义修改，只需要创建一个名为 `validateFailedExceptionHandler` 的 bean，然后就可以自己捕获 `ValidateFailedException ` 来自行处理错误了。
+The return status code and error structure can also be customized, just create a bean named `validateFailedExceptionHandler`, and then you can catch `ValidateFailedException` to handle errors yourself.
 
-```java
+````java
 @Bean
 public void validateFailedExceptionHandler() {}
-```
-当参数含有 `BindingErrors` 类型时，会把错误信息放到里面，不再自动返回 422 错误。用法类似 `BindingResult`。不含有时还按之前的错误逻辑。
+````
+When the parameter contains `BindingErrors` type, the error information will be put in it, and the 422 error will no longer be automatically returned. Usage is similar to `BindingResult`. Does not sometimes follow the wrong logic before.
 
 
 
-说明
+illustrate
 -----------------
 
-JValidation 使用默认的 dataSource, 可能通过 `jvalidation.datasource-name` 来使用其他数据源
+JValidation uses the default dataSource, other data sources may be used via `jvalidation.datasource-name`
 
-根据条件决定是否要验证
+Decide whether to verify based on conditions
 -----------------
 
-所有的验证器都可以接受一个 Condition 的实现类，使用类中的 needValidate 方法判断是否需要验证
+All validators can accept a Condition implementation class, use the needValidate method in the class to determine whether validation is required
 
-Condition 接口的 needValidate 方法接受 Object[] 的参数，参数可以通过验证器的 params 传递， params 可以直接传递字符串，
-也可以传递 {{ this }} 表示当前对象， {{ xxx }} 表示当前对象的其他字段，
-或者使用 {{ request.path.id / request.get.id / request.header[s].id }} 这种方式来获取 request 中的信息
+The needValidate method of the Condition interface accepts Object[] parameters, which can be passed through the validator's params, and params can directly pass strings.
+You can also pass {{ this }} to represent the current object, {{ xxx }} to represent other fields of the current object,
+Or use {{ request.path.id / request.get.id / request.header[s].id }} to get the information in the request
 
-示例:
+Example:
 
-```java
-import com.tianyisoft.jvalidate.annotations.RequiredIf;
+````java
+import com.tianyisoft.jvalidate.annotations.Required;
 
 public class User {
     @Required(condition = NameCondition.class, params = {"foo", "{{ this }}", "{{ bar }}"})
@@ -171,122 +174,133 @@ public class User {
 class NameCondition implements Condition {
     @override
     public Boolean needValidate(Object[] args) {
-        System.out.println(Arrays.toString(args)); // 查看传递过来的参数
-        // 根据参数判断是否要验证
+        System.out.println(Arrays.toString(args)); // View the passed parameters
+        // Determine whether to verify according to the parameters
         return true;
     }
 }
-```
+````
 
-支持的验证方式
+i18n support
+------------
+
+The i18n function has been supported since version 1.6. For the language file format, please refer to the files in the resources folder.
+
+You can create a language file with the same name in the resources directory of the spring boot project to override the default language file.
+
+You can also create new language files in the resources directory to supplement the system language files.
+
+Use `jvalidation.default-lang` to configure the default language, otherwise it defaults to English.
+
+Available Validation Rules
 -----------------
 
 ##### Accepted
-必须是 "yes" ，"on" ，"1" 或 "true"
+Must be "yes" , "on" , "1" or "true"
 
 ##### After
-必须是在 date 的日期之后，date 可以是日期值也可以是其他的字段名，当是其他字段时，需要是相同类型
+Must be after the date of date, date can be a date value or other field names, when it is other fields, it needs to be of the same type
 
 ##### AfterOrEqual
-必须大于或等于 date的日期。date 使用同 After
+Must be a date greater than or equal to date. date is used the same as After
 
 ##### Alpha
-必须由字母组成
+must consist of letters
 
 ##### AlphaDash
-只能包含字母、数字，短破折号（-）和下划线（_）组成
+Can only contain letters, numbers, dashes (-) and underscores (_)
 
 ##### AlphaNum
-只能由字母和数字组成
+Can only consist of letters and numbers
 
 ##### Bail
-当遇到第一个失败时，停止后续验证，只针对当前字段，其他字段还会继续验证，为了正常使用，请放到字段验证器的第一个
+When the first failure is encountered, the subsequent verification is stopped, only for the current field, and other fields will continue to be verified. For normal use, please put it in the first field of the field validator.
 
 ##### Before
-与 AfterOrEqual 相反
+Opposite of AfterOrEqual
 
 ##### BeforeOrEqual
-与 After 相反
+Opposite of After
 
 ##### Between
-当字段为数字时，表示值在数字中间，当字段为字符串、数组或 Collection 的子类时，表示字段长度在最大和最小值之间
+When the field is a number, it means that the value is in the middle of the number, and when the field is a subclass of string, array or Collection, it means that the length of the field is between the maximum and minimum values
 
 ##### DateEquals
-必须是等于 date 的日期
+Must be a date equal to date
 
 ##### Different
-必须和指定的字段有不同的值，可以选择设置 `strict` 选择严格模式，严格模式使用 `==` 比较，否则使用 `equals` 比较
+Must have a different value from the specified field, you can choose to set `strict` to select strict mode, use `==` for strict mode comparison, otherwise use `equals` for comparison
 
 ##### Distinct
-只能用于 list 或数组， 要求其中不能有重复的值
+Can only be used for lists or arrays, where no duplicate values are required
 
 ##### Email
-必须是 email 地址
+Must be an email address
 
 ##### EndsWith
-字符串必须以指定的几个值中的一个结尾
+The string must end with one of the specified values
 
 ##### Exists
-必须在数据库已存在，需要数据库支持。
+The database must already exist, and database support is required.
 
-例如: `@Exists(table = "users", field = "email", where = " and id != {{id}} ")`
+For example: `@Exists(table = "users", field = "email", where = " and id != {{id}} ")`
 
-或者: `@Exists(sql = "select count(*) from users where email = ? and id = {{ request.path.user }}")`
+Or: `@Exists(sql = "select count(*) from users where email = ? and id = {{ request.path.user }}")`
 
-表示 users 表里面的 email 字段必须等于当前字段值，通过 where 语句排除了 id 等于当前对象的 id 值的.
+Indicates that the email field in the users table must be equal to the current field value, and the where statement excludes those whose id is equal to the current object's id value.
 
-在where 条件里面可以使用 {{ request.path.id / request.get.id / request.header[s].id }} 这种方式来获取 request 中的信息，这在修改对象的时候特别有用。
+In the where condition, you can use {{ request.path.id / request.get.id / request.header[s].id }} to get the information in the request, which is especially useful when modifying objects.
 
 ##### In
-验证字符串必须在给定的值中
+Validation string must be in the given value
 
 ##### Ip
-必须是 ip 地址， ipv4 或者 ipv6都可以
+Must be an ip address, either ipv4 or ipv6 is fine
 
 ##### Ipv4
-必须是 ipv4 地址
+Must be an ipv4 address
 
 ##### Ipv6
-必须是 ipv6 地址
+Must be an ipv6 address
 
 ##### Max
-当字段为数字时，表示最大值，当字段为字符串、数组或 Collection 的子类时，表示最大长度
+When the field is a number, it represents the maximum value, and when the field is a subclass of String, Array or Collection, it represents the maximum length
 
 ##### Min
-当字段为数字时，表示最小值，当字段为字符串、数组或 Collection 的子类时，表示最小长度
+When the field is a number, it means the minimum value, and when the field is a subclass of string, array or Collection, it means the minimum length
 
 ##### NotRegexp
-必须不符合正则表达式
+must not match the regular expression
 
 ##### Regexp
-必须符合正则表达式
+Must match regular expression
 
 ##### Required
-不可以为 null, 当 allowEmpty 为 false 时，字符串不能为空，数组或 Collection 对象长度不能为 0
+Cannot be null, when allowEmpty is false, the string cannot be empty, and the length of the array or Collection object cannot be 0
 
 ##### RequiredIf
-已废弃，可以直接使用 Required 实现
+Obsolete, can be implemented directly using Required
 
 ##### StartsWith
-字符串必须以指定的几个值中的一个开头
+String must start with one of several values specified
 
 ##### Unique
-不能在数据库重复，需要数据库支持。
+It cannot be repeated in the database and requires database support.
 
-例如: `@Unique(table = "users", field = "email", where = " and id != {{id}} ")` 
+Example: `@Unique(table = "users", field = "email", where = " and id != {{id}} ")`
 
-或者: `@Unique(sql = "select count(*) from users where email = ? and id != {{ request.path.user }}")`
- 
-表示 users 表里面的 email 字段不能重复，通过 where 语句排除了 id 等于当前对象的 id 值的.
+Or: `@Unique(sql = "select count(*) from users where email = ? and id != {{ request.path.user }}")`
 
-在where 条件里面可以使用 {{ request.path.id / request.get.id / request.header[s].id }} 这种方式来获取 request 中的信息，这在修改对象的时候特别有用。
- 
+Indicates that the email field in the users table cannot be repeated, and the id equal to the id value of the current object is excluded through the where statement.
+
+In the where condition, you can use {{ request.path.id / request.get.id / request.header[s].id }} to get the information in the request, which is especially useful when modifying objects.
+
 ##### UniqueGroup
-用于组合多个 Unique
+Used to combine multiple Unique
 
 ##### Url
-字段值必须是 url 地址
+Field value must be a url address
 
-更多规则添加中...
+More rules are being added...
 
-功能添加中，文档优化中...
+Functions are being added, documents are being optimized...

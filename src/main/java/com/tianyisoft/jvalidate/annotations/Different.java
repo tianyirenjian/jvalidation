@@ -19,7 +19,7 @@ public @interface Different {
      *
      * @return 错误描述，自定义时可以有两个 %s 占位符，表示当前字段名和要比较的字段名
      */
-    String message() default "%s 必须与 %s 有不同的值";
+    String message() default "different";
 
     /**
      * 要比较的字段名

@@ -19,7 +19,7 @@ public @interface Email {
      *
      * @return 错误描述，自定义时可以有一个 %s 占位符，表示当前字段名
      */
-    String message() default "%s 必须是正确的 email 格式";
+    String message() default "email";
 
     /**
      * 判断是否需要进行验证的类，这个类要实现 Condition 接口，验证类会调用里面的 needValidate 方法来判断是否进行验证

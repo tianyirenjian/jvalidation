@@ -2,7 +2,6 @@ package com.tianyisoft.jvalidate.exceptions;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.core.NestedRuntimeException;
 import org.springframework.http.HttpStatus;
 
 public class ValidateFailedException extends Exception {

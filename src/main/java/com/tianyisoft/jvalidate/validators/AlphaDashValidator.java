@@ -2,16 +2,17 @@ package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.AlphaDash;
 import com.tianyisoft.jvalidate.utils.Tuple2;
+import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 public class AlphaDashValidator extends RegexpValidator {
-    public Tuple2<Boolean, String> validate(AlphaDash alphaDash, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+    public Tuple2<Boolean, String> validate(AlphaDash alphaDash, ValidatorParams vParams)
             throws NoSuchFieldException, IllegalAccessException, InstantiationException {
 
-        if (notNeedValidate(groups, alphaDash.groups(), alphaDash.condition(), klass, object, alphaDash.params())) {
+        if (notNeedValidate(vParams.getGroups(), alphaDash.groups(), alphaDash.condition(), vParams.getKlass(), vParams.getObject(), alphaDash.params())) {
             return trueResult();
         }
-        Object o = getFieldValue(klass, object, fieldName);
-        return validateRegexp(o, regexp() , 0, alphaDash.message(), fieldName);
+        Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
+        return validateRegexp(o, regexp() , 0, alphaDash.message(), vParams);
     }
 
     @Override

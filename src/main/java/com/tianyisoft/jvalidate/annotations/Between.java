@@ -23,7 +23,7 @@ public @interface Between {
      *
      * @return 错误描述，自定义时可以有三个 %s 占位符，表示当前字段名、最小值和最大值
      */
-    String message() default "%s 必须在 %s 和 %s 之间";
+    String message() default "between";
 
     /**
      * 最小值
