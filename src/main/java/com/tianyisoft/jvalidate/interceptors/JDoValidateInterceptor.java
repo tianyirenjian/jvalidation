@@ -36,7 +36,12 @@ public class JDoValidateInterceptor implements HandlerInterceptor, ApplicationCo
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        HandlerMethod handlerMethod = (HandlerMethod) handler;
+        HandlerMethod handlerMethod = null;
+        try {
+            handlerMethod = (HandlerMethod) handler;
+        } catch (Exception exception) {
+            return true;
+        }
         Parameter[] parameters = handlerMethod.getMethod().getParameters();
         Optional<Parameter> first = Arrays.stream(parameters)
                 .filter(param -> param.getAnnotation(JValidated.class) != null)
