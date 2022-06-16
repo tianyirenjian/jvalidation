@@ -1,21 +1,25 @@
 package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.Distinct;
+import com.tianyisoft.jvalidate.utils.Pair;
 import com.tianyisoft.jvalidate.utils.Tuple2;
+import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.tianyisoft.jvalidate.utils.Helper.mapOf;
+
 public class DistinctValidator extends Validator {
-    public Tuple2<Boolean, String> validate(Distinct distinct, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+    public Tuple2<Boolean, String> validate(Distinct distinct, ValidatorParams vParams)
             throws NoSuchFieldException, IllegalAccessException, InstantiationException {
 
-        if (notNeedValidate(groups, distinct.groups(), distinct.condition(), klass, object, distinct.params())) {
+        if (notNeedValidate(vParams.getGroups(), distinct.groups(), distinct.condition(), vParams.getKlass(), vParams.getObject(), distinct.params())) {
             return trueResult();
         }
-        Object o = getFieldValue(klass, object, fieldName);
+        Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
         if (o == null || (!(o.getClass().isArray()) && !(o instanceof List))) {
             return trueResult();
         }
@@ -32,6 +36,9 @@ public class DistinctValidator extends Validator {
                 return trueResult();
             }
         }
-        return falseResult(distinct.message(), fieldName);
+        return falseResult(vParams.getMessages(), distinct.message(), mapOf(
+                Pair.of("attribute", vParams.getFieldName()),
+                Pair.of("input", o)
+        ));
     }
 }

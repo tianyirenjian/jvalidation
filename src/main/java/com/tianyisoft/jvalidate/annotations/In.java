@@ -21,7 +21,7 @@ public @interface In {
      *
      * @return 错误描述，自定义时可以有一个 %s 占位符，表示当前字段名
      */
-    String message() default "%s 的值必须在 %s 中";
+    String message() default "in";
 
     /**
      * 给定的值的列表

@@ -23,7 +23,7 @@ public @interface Max {
      *
      * @return 错误描述，自定义时可以有两个 %s 占位符，表示当前字段名和最大值
      */
-    String message() default "%s 不能大于 %s";
+    String message() default "max";
 
     /**
      * 最大值

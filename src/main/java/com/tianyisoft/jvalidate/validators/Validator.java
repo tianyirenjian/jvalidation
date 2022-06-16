@@ -41,8 +41,12 @@ public abstract class Validator {
         return new Tuple2<>(true, "");
     }
 
-    public Tuple2<Boolean, String> falseResult(String message, Object... params) {
+    public Tuple2<Boolean, String> falseResult(String message, Object ...params) {
         return new Tuple2<>(false, String.format(message, params));
+    }
+
+    public Tuple2<Boolean, String> falseResult(Map<String, String> messages, String messageKey, Map<String, Object> replaces) {
+        return new Tuple2<>(false, getErrorMessage(messages, messageKey, replaces));
     }
 
     public Field getAnotherField(Class<?> klass, String name) {
@@ -148,5 +152,13 @@ public abstract class Validator {
             od = ((Number) d).longValue();
         }
         return od;
+    }
+
+    protected String getErrorMessage(Map<String, String> messages, String messageKey, Map<String, Object> replaces) {
+        final String[] message = {messages.getOrDefault(messageKey, messageKey)};
+        replaces.forEach((k, v) -> {
+            message[0] = message[0].replaceAll(":" +k+ ":", String.format("%s", v instanceof Double ? tryDoubleToLong((Double)v) : v));
+        });
+        return message[0];
     }
 }

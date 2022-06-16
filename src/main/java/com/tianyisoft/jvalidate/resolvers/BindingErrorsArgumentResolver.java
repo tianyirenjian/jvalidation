@@ -19,6 +19,6 @@ public class BindingErrorsArgumentResolver implements HandlerMethodArgumentResol
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        return ((HttpServletRequest) (webRequest.getNativeRequest())).getAttribute("jvalidation_binding_errors");
+        return ((HttpServletRequest) (webRequest.getNativeRequest())).getAttribute("__jvalidation_binding_errors");
     }
 }

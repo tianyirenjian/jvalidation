@@ -8,6 +8,16 @@ import org.springframework.context.annotation.Configuration;
 public class JValidationConfiguration {
     private String datasourceName;
 
+    private String defaultLang = "en";
+
+    public String getDefaultLang() {
+        return defaultLang;
+    }
+
+    public void setDefaultLang(String defaultLang) {
+        this.defaultLang = defaultLang;
+    }
+
     public String getDatasourceName() {
         return datasourceName;
     }

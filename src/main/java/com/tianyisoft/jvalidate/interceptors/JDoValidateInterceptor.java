@@ -12,6 +12,7 @@ import com.tianyisoft.jvalidate.utils.Helper;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -63,14 +64,20 @@ public class JDoValidateInterceptor implements HandlerInterceptor, ApplicationCo
             return true;
         }
 
-        Map<String, List<String>> errors = JValidator.doValidate(needValidate, getJdbcTemplate(jvalidated.datasourceName()));
+        Locale locale = LocaleContextHolder.getLocale();
+
+        Map<String, List<String>> errors = JValidator.doValidate(needValidate,
+                getJdbcTemplate(jvalidated.datasourceName()),
+                locale.getLanguage(),
+                jValidationConfiguration.getDefaultLang()
+        );
 
         if (errors.size() > 0) {
             boolean hasBindingErrors = false;
             for (Parameter param : parameters) {
                 if (param.getType().getName().equals(BindingErrors.class.getName())) {
                     hasBindingErrors = true;
-                    request.setAttribute("jvalidation_binding_errors", new BindingErrors(errors));
+                    request.setAttribute("__jvalidation_binding_errors", new BindingErrors(errors));
                     break;
                 }
             }

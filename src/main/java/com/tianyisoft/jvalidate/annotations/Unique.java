@@ -18,7 +18,7 @@ public @interface Unique {
      *
      * @return 错误描述，自定义时可以有两个 %s 占位符，表示当前字段名和表名
      */
-    String message() default "%s 在 %s 中已存在";
+    String message() default "unique";
 
     /**
      * 数据库表名

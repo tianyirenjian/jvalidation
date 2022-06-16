@@ -1,16 +1,20 @@
 package com.tianyisoft.jvalidate.validators;
 
 import com.tianyisoft.jvalidate.annotations.Between;
+import com.tianyisoft.jvalidate.utils.Pair;
 import com.tianyisoft.jvalidate.utils.Tuple2;
+import com.tianyisoft.jvalidate.utils.ValidatorParams;
+
+import static com.tianyisoft.jvalidate.utils.Helper.mapOf;
 
 public class BetweenValidator extends BaseLengthValidator {
-    public Tuple2<Boolean, String> validate(Between between, Class<?>[] groups, Class<?> klass, Object object, String fieldName)
+    public Tuple2<Boolean, String> validate(Between between, ValidatorParams vParams)
             throws NoSuchFieldException, IllegalAccessException, InstantiationException {
 
-        if (notNeedValidate(groups, between.groups(), between.condition(), klass, object, between.params())) {
+        if (notNeedValidate(vParams.getGroups(), between.groups(), between.condition(), vParams.getKlass(), vParams.getObject(), between.params())) {
             return trueResult();
         }
-        Object o = getFieldValue(klass, object, fieldName);
+        Object o = getFieldValue(vParams.getKlass(), vParams.getObject(), vParams.getFieldName());
         if (o == null) {
             return trueResult();
         }
@@ -21,6 +25,11 @@ public class BetweenValidator extends BaseLengthValidator {
 
         Object min = tryDoubleToLong(between.min());
         Object max = tryDoubleToLong(between.max());
-        return falseResult(between.message(), fieldName, min, max);
+        return falseResult(vParams.getMessages(), between.message(), mapOf(
+                Pair.of("attribute", vParams.getFieldName()),
+                Pair.of("input", o),
+                Pair.of("min", min),
+                Pair.of("max", max)
+        ));
     }
 }

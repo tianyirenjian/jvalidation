@@ -19,7 +19,7 @@ public @interface Ip {
      *
      * @return 错误描述，自定义时可以有一个 %s 占位符，表示当前字段名
      */
-    String message() default "%s 必须是有效的 ip 地址";
+    String message() default "ip";
 
     /**
      * 判断是否需要进行验证的类，这个类要实现 Condition 接口，验证类会调用里面的 needValidate 方法来判断是否进行验证

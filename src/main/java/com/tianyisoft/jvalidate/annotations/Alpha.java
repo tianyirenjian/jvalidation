@@ -19,7 +19,7 @@ public @interface Alpha {
      *
      * @return 错误描述，自定义时可以有一个 %s 占位符，表示当前字段名
      */
-    String message() default "%s 只能由字母组成";
+    String message() default "alpha";
 
     /**
      * 判断是否需要进行验证的类，这个类要实现 Condition 接口，验证类会调用里面的 needValidate 方法来判断是否进行验证

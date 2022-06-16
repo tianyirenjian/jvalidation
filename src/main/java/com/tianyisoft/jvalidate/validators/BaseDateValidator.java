@@ -1,28 +1,31 @@
 package com.tianyisoft.jvalidate.validators;
 
+import com.tianyisoft.jvalidate.utils.Pair;
 import com.tianyisoft.jvalidate.utils.Tuple2;
+import com.tianyisoft.jvalidate.utils.ValidatorParams;
 
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Objects;
 import java.util.TimeZone;
 
+import static com.tianyisoft.jvalidate.utils.Helper.mapOf;
+
 public class BaseDateValidator extends Validator {
     protected Tuple2<Boolean, String> validateDate(
-            Class<?> klass,
-            Object object,
-            String fieldName,
+            ValidatorParams vParams,
             Boolean withTime,
             String date,
             String message,
             String operator
     ) throws NoSuchFieldException, IllegalAccessException {
+        Class<?> klass = vParams.getKlass();
+        Object object = vParams.getObject();
+        String fieldName = vParams.getFieldName();
         Object o = getFieldValue(klass, object, fieldName);
         if (o == null) {
             return trueResult();
@@ -95,7 +98,12 @@ public class BaseDateValidator extends Validator {
                 }
             }
         }
-        return falseResult(message, fieldName, date, date);
+
+        return falseResult(vParams.getMessages(), message, mapOf(
+                Pair.of("attribute", fieldName),
+                Pair.of("input", o),
+                Pair.of("date", date)
+        ));
     }
 
     private Boolean operatorDate(Date d1, Date d2, String operator) {
