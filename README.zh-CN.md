@@ -190,7 +190,7 @@ i18n 支持
 
 也可以在 resources 目录下创建新的语言文件来补充系统语言文件的不足。
 
-使用 `jvalidation.default-lang` 来配置默认语言，不配置默认为英文。
+默认会使用 `LocaleContextHolder.getLocale()` 自动判断要使用的语言，如果找不到对应的语言文件，则会使用默认语言，使用 `jvalidation.default-lang` 来配置默认语言，不配置默认为英文。
 
 支持的验证方式
 -----------------
