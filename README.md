@@ -190,7 +190,7 @@ You can create a language file with the same name in the resources directory of 
 
 You can also create new language files in the resources directory to supplement the system language files.
 
-Use `jvalidation.default-lang` to configure the default language, otherwise it defaults to English.
+The default behavior is to use LocaleContextHolder.getLocale() to automatically determine the language to use. If the corresponding language file is not found, the default language is used. You can configure the default language using "jvalidation.default-lang", and if it's not configured, the default language will be English.
 
 Available Validation Rules
 -----------------
