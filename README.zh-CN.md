@@ -6,6 +6,8 @@ JValidation
 
 中文 | [English](./README.md)
 
+<b>验证库只支持 spring boot 2.x 版本！</b>
+
 JValidation 是为 spring boot 开发的验证库。内置多种验证器, 主要是参考 Laravel 框架的验证器。目前可用的验证类正在新增中。 相比大多数验证器来说，最大的优点是支持数据库验证。
 
 安装方法
