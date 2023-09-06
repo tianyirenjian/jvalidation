@@ -6,6 +6,8 @@ JValidation
 
 English | [中文版](./README.zh-CN.md)
 
+<b> This library only works with spring boot 2.x version. </b>
+
 JValidation is a validation library developed for spring boot. There are a variety of built-in validators, mainly referring to the validators of the Laravel framework. Currently available validation classes are being added. Compared to most validators, the biggest advantage is that it supports database validation.
 
 installation
